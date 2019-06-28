@@ -1,1 +1,4 @@
 .idea/
+venv/pyenv.cfg
+venv/Lib/
+venv/Scripts/python.exe
