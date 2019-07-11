@@ -26,6 +26,8 @@ data = ""
 start_index = -1
 end_index = -1
 len_of_hex = -1
+err_cnt = 0
+len_of_hex= 0
 
 data_arr = []
 
@@ -59,18 +61,20 @@ s.connect((HOST, PORT))
 
 
 def exec():
+    global err_cnt, start_index, data_payload, end_index, len_of_hex, data_arr, data, len_of_hex
     while True:
         data, addr = s.recvfrom(512)  # buffer size is 512 bytes
         data = data.hex()
-        #
+        # if there is some data payload left from the previous iteration
         if data_payload:
             if not findEndIndex(): continue
-
         start_index = data.find(START_CODE)
-        # stop if there is errors
+        # continue if start_code was not found
+        if start_index < -1 : continue
+        # break if there is errors
         err_cnt = extract(data, start_index + ERR_CNT_START_INDEX, start_index + ERR_CNT_END_INDEX)
         if (getInt(err_cnt) > 0):
-            raise Exception('ERRORS OCCURED!')
+            raise Exception('ERRORS OCCURED! ', err_cnt)
 
         buffer_len = extract(data, start_index + BUF_LEN_START_INDEX, start_index + BUF_LEN_END_INDEX)
         int_len = getInt(buffer_len)
@@ -79,10 +83,11 @@ def exec():
         findEndIndex()
 
 def findEndIndex():
+    global err_cnt, start_index, data_payload, end_index, len_of_hex, data_arr
     end_index = data.find(END_CODE)
     if end_index < 0:
         data_payload += data
-        return false
+        return False
     else:
         while end_index - start_index < len_of_hex:
             end_index = data.find(END_CODE, end_index + 1)
@@ -95,58 +100,6 @@ def findEndIndex():
             data_payload += extract(data, start_index + DATA_PAYLOAD_START_INDEX, end_index)
             data_arr.append(data_payload)
             data_payload = ""
-            return true
+            return True
 
 exec()
-
-
-# def getEndCode():
-#     end_index = data.find(END_CODE)
-#     if end_index < 0:
-#         curr_data += data
-#     else:
-#         while (end_index - start_index != len_of_hex or end_index - start_index < len_of_hex):
-#             end_index = data.find(END_CODE, end_index + 1)
-#
-#             # if can't find end code within data length
-#         if (end_index - start_index < len_of_hex):
-#             return false
-#
-#
-# def execAll():
-#     while True:
-#         data, addr = s.recvfrom(512)  # buffer size is 512 bytes
-#         data = data.hex()
-#
-#         # find AA - start code
-#         start_index = data.find("aa")
-#
-#         # stop if there is errors
-#         err_cnt = extract(data, start_index + ERR_CNT_START_INDEX, start_index + ERR_CNT_END_INDEX)
-#         if (getInt(err_cnt) > 0):
-#             break
-#
-#         # data buffer length in bytes
-#         buffer_len = extract(data, start_index + BUF_LEN_START_INDEX, start_index + BUF_LEN_END_INDEX)
-#         int_len = getInt(buffer_len)
-#
-#         # find 81 - end code
-#         end_index = data.find("81")
-#
-#         # if no end_index in data chunk
-#         if (end_index < 0):
-#             prev_data = extract(data, start_index + DATA_PAYLOAD_START_INDEX)
-#
-#         # length of characters in hex representation
-#         len_of_hex = int_len * 2 - START_END_CODE_LENGTH
-#
-#         while (end_index - start_index != len_of_hex or end_index - start_index < len_of_hex):
-#             end_index = data.find("81", end_index + 1)
-#
-#         # if can't find end code within data length
-#         if (end_index - start_index < len_of_hex):
-#             continue
-#
-#         data_payload += extract(data, start_index + DATA_PAYLOAD_START_INDEX, end_index)
-#         data_arr.append(data_payload)
-
