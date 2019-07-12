@@ -5,7 +5,7 @@ class DataStorage:
         self.__data_arr = []
         self.curr_data = Data()
 
-    def addData(self):
+    def saveCurrData(self):
         self.__data_arr.append(self.curr_data)
         self.curr_data = Data()
 
