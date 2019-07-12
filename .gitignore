@@ -3,3 +3,4 @@ venv/pyenv.cfg
 venv/Lib/
 venv/Scripts/python.exe
 venv/pyvenv.cfg
+venv/Scripts/__pycache__/
