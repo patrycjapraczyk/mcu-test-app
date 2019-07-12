@@ -1,0 +1,10 @@
+import socket
+from GlobalConstants import GlobalConstants
+from Calculator import Calculator
+from DataStorage import DataStorage
+
+calculator = Calculator()
+dataStorage = DataStorage()
+
+
+
