@@ -6,6 +6,10 @@ class DataStorage:
         self.curr_data = Data()
 
     def saveCurrData(self):
+        """"
+            adds self.curr_data to self._data_arr
+            and clears self.curr_data
+        """
         self.__data_arr.append(self.curr_data)
         print(self.curr_data.to_str())
         self.curr_data = Data()

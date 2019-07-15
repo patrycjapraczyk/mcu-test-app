@@ -18,7 +18,7 @@ class DataStreamer:
         except socket.error as err:
             print("socket creation failed with error %s" % (err))
 
-        # connecting to the server
+        # connecting to the data sender
         self.s.connect((GlobalConstants.HOST, GlobalConstants.PORT))
 
     def startDataProcessingThread(self):
@@ -30,6 +30,7 @@ class DataStreamer:
         while True:
             data, addr = self.s.recvfrom(512)  # buffer size is 512 bytes
             data = data.hex()
+            # add the incoming data str to the queue
             self.q.put(data)
 
 
