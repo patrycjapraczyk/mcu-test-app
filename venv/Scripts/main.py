@@ -10,7 +10,6 @@ class DataStreamer:
         self.openSocket()
         self.startDataProcessingThread()
         self.receiveData()
-        self.receiveData()
 
     def openSocket(self):
         try:
@@ -27,7 +26,6 @@ class DataStreamer:
         t.start()
 
     def receiveData(self):
-        self.openSocket()
         self.startDataProcessingThread()
         while True:
             data, addr = self.s.recvfrom(512)  # buffer size is 512 bytes

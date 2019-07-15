@@ -7,6 +7,7 @@ class DataStorage:
 
     def saveCurrData(self):
         self.__data_arr.append(self.curr_data)
+        print(self.curr_data.to_str())
         self.curr_data = Data()
 
     def printAllData(self):
