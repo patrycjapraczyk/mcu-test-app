@@ -11,6 +11,7 @@ class DataStorage:
             and clears self.curr_data
         """
         self.__data_arr.append(self.curr_data)
+        self.curr_data.payload_len = len(self.curr_data.data_payload)
         print(self.curr_data.to_str())
         self.curr_data = Data()
 

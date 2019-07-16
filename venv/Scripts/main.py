@@ -27,7 +27,6 @@ class DataStreamer:
         t.start()
 
     def receiveData(self):
-        self.startDataProcessingThread()
         while True:
             data, addr = self.s.recvfrom(512)  # buffer size is 512 bytes
             data = data.hex()

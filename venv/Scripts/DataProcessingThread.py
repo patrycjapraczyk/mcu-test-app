@@ -18,8 +18,8 @@ class DataProcessingThread(Thread):
             # If there is data to be analysed from the previous data str,
             # do not take the new data off the queue
             curr_data_item = self.data_storage.curr_data
-            if not self.curr_data_str:
-                self.curr_data_str = self.q.get()
+            if len(self.curr_data_str) < GlobalConstants.AVERAGE_DATA_LEN:
+                self.curr_data_str += self.q.get()
 
             # try to find end code if there is data that has not been finished
             if curr_data_item.data_payload:
@@ -27,13 +27,13 @@ class DataProcessingThread(Thread):
                 continue
 
             # NEW DATA PIECE
-            curr_data_item.start_index = self.curr_data_str.find(GlobalConstants.START_CODE)
+            start_index = self.curr_data_str.find(GlobalConstants.START_CODE)
             # if start index was not found
-            if curr_data_item.start_index < -1:
+            if start_index < -1:
                 raise Exception("MISSING START CODE")
 
             # remove all data preceding the start code
-            self.curr_data_str = self.curr_data_str[curr_data_item.start_index:]
+            self.curr_data_str = self.curr_data_str[start_index:]
 
             # extract errors
             err = Calculator.extract(self.curr_data_str, GlobalConstants.ERR_CNT_START_INDEX,
@@ -58,14 +58,15 @@ class DataProcessingThread(Thread):
     def findEndIndex(self):
         curr_data_item = self.data_storage.curr_data
         data_length = len(self.curr_data_str)
+        payload_length = len(curr_data_item.data_payload)
         curr_data_length = len(curr_data_item.data_payload) + GlobalConstants.DATA_PAYLOAD_START_INDEX
+        end_code_index = curr_data_item.len_of_hex - GlobalConstants.DATA_PAYLOAD_START_INDEX - GlobalConstants.START_END_CODE_LENGTH - payload_length
 
-        if data_length - curr_data_length < curr_data_item.len_of_hex:
+        if data_length < end_code_index:
             # add currDataPayload if end index not found
             self.addDataPayload(data_length)
             return False
         else:
-            end_code_index = curr_data_item.len_of_hex - GlobalConstants.DATA_PAYLOAD_START_INDEX - GlobalConstants.START_END_CODE_LENGTH - len(curr_data_item.data_payload)
             expected_end_code = self.curr_data_str[
                                 end_code_index: end_code_index + GlobalConstants.START_END_CODE_LENGTH]
             if expected_end_code == GlobalConstants.END_CODE:
