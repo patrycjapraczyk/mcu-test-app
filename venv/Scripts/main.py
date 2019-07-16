@@ -7,6 +7,7 @@ from DataProcessingThread import DataProcessingThread
 class DataStreamer:
     def __init__(self):
         self.q = Queue()
+        self.messages = []
         self.openSocket()
         self.startDataProcessingThread()
         self.receiveData()
