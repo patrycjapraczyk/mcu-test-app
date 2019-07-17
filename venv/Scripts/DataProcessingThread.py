@@ -71,6 +71,7 @@ class DataProcessingThread(Thread):
                                 end_code_index: end_code_index + GlobalConstants.START_END_CODE_LENGTH]
             if expected_end_code == GlobalConstants.END_CODE:
                 self.addDataPayload(end_code_index)
+                self.analyseDataPayload()
                 self.data_storage.saveCurrData()
             # if can't find the end code within data
             else:
@@ -86,3 +87,23 @@ class DataProcessingThread(Thread):
 
         # remove the analysed data from curr_data_str
         self.curr_data_str = self.curr_data_str[end_index + GlobalConstants.START_END_CODE_LENGTH:]
+
+
+
+    def analyseDataPayload(self):
+        data_payload = self.data_storage.curr_data.data_payload
+        index_list = []
+        for i in range(0, len(data_payload) - GlobalConstants.DATA_BLOCK_LEN_HEX, GlobalConstants.DATA_BLOCK_LEN_HEX):
+            index_list.append(data_payload[i:i + GlobalConstants.DATA_BLOCK_LEN_HEX])
+
+        index_list = self.remove_every_other(index_list)
+        for i in range(0, len(index_list)):
+            index_list[i] = Calculator.getInt(index_list[i])
+
+        if index_list.sort() != index_list:
+            raise Exception("Indices in the list were not sorted!", index_list)
+
+
+    def remove_every_other(self, my_list):
+        return my_list[::2]
+

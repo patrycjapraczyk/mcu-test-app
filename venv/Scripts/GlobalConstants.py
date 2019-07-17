@@ -21,3 +21,5 @@ class GlobalConstants:
     BUF_LEN_LENGTH = 4
     TCP_LEN_LENGTH = 8
     AVERAGE_DATA_LEN = 620
+
+    DATA_BLOCK_LEN_HEX = 4
