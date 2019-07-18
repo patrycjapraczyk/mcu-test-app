@@ -7,8 +7,8 @@ class GlobalConstants:
 
     BUF_LEN_START_INDEX = 2
     BUF_LEN_END_INDEX = 5
-    TCP_LEN_START_INDEX = 6
-    TCP_LEN_END_INDEX = 13
+    DATA_COUNTER_START_INDEX = 6
+    DATA_COUNTER_END_INDEX = 13
     ACQ1_LEN_START_INDEX = 14
     ACQ1_LEN_END_INDEX = 17
     ACQ2_LEN_START_INDEX = 18
@@ -23,3 +23,11 @@ class GlobalConstants:
     AVERAGE_DATA_LEN = 620
 
     DATA_BLOCK_LEN_HEX = 4
+
+    DATA_PARAMS_LEN = 14 # data check parameters length- in bytes
+    BYTE_LEN = 8
+
+    DATA_INDEX_LENGTH = 8
+
+    HEX_BASE = 16
+    MAX_DATA_INDEX = HEX_BASE^(DATA_INDEX_LENGTH) - 1
