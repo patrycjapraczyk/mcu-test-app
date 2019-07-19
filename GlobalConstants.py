@@ -24,10 +24,10 @@ class GlobalConstants:
 
     DATA_BLOCK_LEN_HEX = 4
 
-    DATA_PARAMS_LEN = 14 # data check parameters length- in bytes
+    DATA_PARAMS_LEN = 14  # data check parameters length- in bytes
     BYTE_LEN = 8
 
     DATA_INDEX_LENGTH = 8
 
     HEX_BASE = 16
-    MAX_DATA_INDEX = HEX_BASE^(DATA_INDEX_LENGTH) - 1
+    MAX_DATA_INDEX = HEX_BASE ^ (DATA_INDEX_LENGTH) - 1

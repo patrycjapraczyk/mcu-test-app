@@ -1,5 +1,5 @@
 class Calculator:
-    def getInt(hexnum: str) -> int:
+    def get_int(hexnum: str) -> int:
         """
         :param hexnum: (str) a hexdecimal number
         :return: decimal representation of hexnum (int)
@@ -7,7 +7,7 @@ class Calculator:
         HEX_BASE = 16
         return int(hexnum, HEX_BASE)
 
-    def getHex(decnum: int) -> str:
+    def get_hex(decnum: int) -> str:
         """
         :param decnum: (int) a decimal number
         :return: hexdecimal representation of decnum (str)

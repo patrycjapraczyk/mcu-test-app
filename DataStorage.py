@@ -1,11 +1,12 @@
 from Data import Data
 
+
 class DataStorage:
     def __init__(self):
         self.data_arr = []
         self.curr_data = Data()
 
-    def saveCurrData(self):
+    def save_curr_data(self):
         """"
             adds self.curr_data to self._data_arr
             and clears self.curr_data
@@ -15,6 +16,6 @@ class DataStorage:
         print(self.curr_data.to_str())
         self.curr_data = Data()
 
-    def printAllData(self):
+    def print_all_data(self):
         for data in self.data_arr:
             print(data.to_str())
