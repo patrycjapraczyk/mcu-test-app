@@ -4,3 +4,4 @@ venv/Lib/
 venv/Scripts/python.exe
 venv/pyvenv.cfg
 venv/Scripts/__pycache__/
+venv/
