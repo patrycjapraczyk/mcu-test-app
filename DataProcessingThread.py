@@ -1,8 +1,8 @@
 from queue import Queue
 from threading import Thread
+import threading
 
 from Calculator import Calculator
-from Data import Data
 from DataStorage import DataStorage
 from GlobalConstants import GlobalConstants
 from StrManipulator import StrManipulator
@@ -11,17 +11,27 @@ from StrManipulator import StrManipulator
 class DataProcessingThread(Thread):
     def __init__(self, queue: Queue):
         Thread.__init__(self)
+        self._stopped = False
         self.q = queue
         self.data_storage = DataStorage()
         self.curr_data_str = ""
 
+    def stop(self):
+        self._stopped = True
+
     def run(self):
-        while True:
+        #find start index
+        start_index = self.curr_data_str.find(GlobalConstants.START_CODE)
+        # remove all data preceding the start code
+        self.curr_data_str = self.curr_data_str[start_index:]
+
+        while not self._stopped :
             # If there is data to be analysed from the previous data str,
             # do not take the new data off the queue
             curr_data_item = self.data_storage.curr_data
             if len(self.curr_data_str) < GlobalConstants.AVERAGE_DATA_LEN:
-                self.curr_data_str += self.q.get()
+                curr_data = self.q.get()
+                self.curr_data_str += curr_data
 
             # try to find end code if there is data that has not been finished
             if curr_data_item.data_payload:
@@ -29,13 +39,12 @@ class DataProcessingThread(Thread):
                 continue
 
             # NEW DATA PIECE
-            start_index = self.curr_data_str.find(GlobalConstants.START_CODE)
+            expected_start_code = self.curr_data_str[:GlobalConstants.START_END_CODE_LENGTH]
             # if start index was not found
-            if start_index < -1:
+            if expected_start_code != GlobalConstants.START_CODE:
                 raise Exception("MISSING START CODE")
 
-            # remove all data preceding the start code
-            self.curr_data_str = self.curr_data_str[start_index:]
+            if len(self.curr_data_str) < GlobalConstants.DATA_PAYLOAD_START_INDEX: continue
 
             # extract errors
             err = StrManipulator.extract(self.curr_data_str, GlobalConstants.ERR_CNT_START_INDEX,
@@ -57,11 +66,13 @@ class DataProcessingThread(Thread):
                                                 GlobalConstants.DATA_COUNTER_END_INDEX)
 
             curr_data_item.data_index = Calculator.get_int(data_index)
+            curr_data_item.data_index_hex = data_index
 
             # remove all all data that has been analysed and saved already
             self.curr_data_str = self.curr_data_str[GlobalConstants.DATA_PAYLOAD_START_INDEX:]
 
             self.find_end_index()
+
 
     def find_end_index(self):
         curr_data_item = self.data_storage.curr_data
@@ -93,7 +104,6 @@ class DataProcessingThread(Thread):
         curr_data_item = self.data_storage.curr_data
 
         curr_data_item.data_payload += self.curr_data_str[:end_index]
-        curr_data_item.data_pieces_num += 1
 
         # remove the analysed data from curr_data_str
         self.curr_data_str = self.curr_data_str[end_index + GlobalConstants.START_END_CODE_LENGTH:]
@@ -138,9 +148,14 @@ class DataProcessingThread(Thread):
 
         if prev_index != GlobalConstants.MAX_DATA_INDEX:
             if curr_index != prev_index + 1:
-                raise Exception("Unexpected data index! Prev index:", prev_index, "curr data: ",
-                                curr_data_item.to_str())
+                raise Exception("Unexpected data index! Prev index:", prev_index, prev_data_item.data_index_hex , "curr data: ",
+                                curr_data_item.data_index, curr_data_item.data_index_hex ,
+                                "curr data string: ", self.curr_data_str,
+                                "queue ", self.q.queue)
         else:
             if curr_index == 0:
-                raise Exception("Unexpected data index! Prev index:", prev_index, "curr data: ",
-                                curr_data_item.to_str())
+                raise Exception("Unexpected data index! Prev index:", prev_index, prev_data_item.data_index_hex,
+                                "curr data: ",
+                                curr_data_item.data_index, curr_data_item.data_index_hex ,
+                                "curr data string: ", self.curr_data_str,
+                                "queue ", self.q.queue)

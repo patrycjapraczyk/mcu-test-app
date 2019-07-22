@@ -25,6 +25,7 @@ class DataStreamer:
         self.s.connect((GlobalConstants.HOST, GlobalConstants.PORT))
 
     def start_data_processing_thread(self):
+        # pass the data to the thread via the queue
         t = DataProcessingThread(self.q)
         t.start()
 
