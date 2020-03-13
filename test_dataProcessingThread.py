@@ -17,11 +17,13 @@ class TestDataProcessingThread(TestCase):
 
         time.sleep(3)
 
+        #compare the analysed data saved into data_storage
+        #to the data that have been formerly generated
         for i in range(0, 10):
             correct_data = self.get_correct_data(i)[1]
             curr_data = data_arr[i]
             self.assertEqual(correct_data.data_payload, curr_data.data_payload)
-            self.assertEqual(correct_data.buff_len, curr_data.buff_len)
+            self.assertEqual(correct_data.packet_len, curr_data.packet_len)
 
         data_processing_thread.stop()
 
@@ -71,7 +73,7 @@ class TestDataProcessingThread(TestCase):
     def test_incorrect_buffer_len(self):
         def exec_incorrect_buffer_len(buff_len):
             correct_data_str = self.get_correct_data()[0]
-            no_buff_len = correct_data_str[GlobalConstants.BUF_LEN_END_INDEX + 1:]
+            no_buff_len = correct_data_str[GlobalConstants.PACKET_LEN_END_INDEX + 1:]
             data_str = GlobalConstants.START_CODE + buff_len + no_buff_len
             q = Queue()
             q.put(data_str)
@@ -133,22 +135,16 @@ class TestDataProcessingThread(TestCase):
 
         self.assertRaises(Exception, data_processing_thread.run)
 
-    def get_correct_data(self, data_index=0):
-        buff_len = "0016"
-        data_index = Calculator.get_hex(data_index)
-        acq_data_len = "00000000"
-        err_cnt = "0000"
-        data_payload = "0000333300013333"
-        correct_str = GlobalConstants.START_CODE + buff_len + data_index + acq_data_len + err_cnt + data_payload + GlobalConstants.END_CODE
-        return correct_str, Data(data_payload, buff_len)
+    def get_correct_data(self, data_cnt=0):
+        packet_len = '0022'
+        data_cnt = Calculator.get_hex(data_cnt)
+        checksum = '00006666'
+        msg_code = '01'
 
-    def get_data(self, data_payload, data_index=0):
-        buff_len = "0016"
-        data_index = Calculator.get_hex(data_index)
-        acq_data_len = "00000000"
-        err_cnt = "0000"
-        correct_str = GlobalConstants.START_CODE + buff_len + data_index + acq_data_len + err_cnt + data_payload + GlobalConstants.END_CODE
-        return correct_str
+        data_payload = "0000333300013333"
+        correct_str = GlobalConstants.START_CODE + packet_len + data_cnt + checksum + msg_code + data_payload + GlobalConstants.END_CODE
+        return correct_str, Data(data_payload, packet_len)
+
 
     def get_correct_queue(self) -> None:
         q = Queue()

@@ -19,10 +19,18 @@ class DataProcessingThread(Thread):
     def stop(self):
         self._stopped = True
 
+    def get_start_index(self, data_str):
+        return data_str.find(GlobalConstants.START_CODE)
+
     def run(self):
-        #find start index
-        start_index = self.curr_data_str.find(GlobalConstants.START_CODE)
-        # remove all data preceding the start code
+        #look for start code initially
+        start_index = self.get_start_index(self.curr_data_str)
+        # take another data packet off the queue if it was not found
+        # and continue the search for the start code
+        while start_index < 0 :
+            self.curr_data_str = curr_data = self.q.get()
+            start_index = self.get_start_index(self.curr_data_str)
+
         self.curr_data_str = self.curr_data_str[start_index:]
 
         while not self._stopped :
@@ -30,10 +38,9 @@ class DataProcessingThread(Thread):
             # do not take the new data off the queue
             curr_data_item = self.data_storage.curr_data
             if len(self.curr_data_str) < GlobalConstants.AVERAGE_DATA_LEN:
-                curr_data = self.q.get()
-                self.curr_data_str += curr_data
+                self.curr_data_str += self.q.get()
 
-            # try to find end code if there is data that has not been finished
+            # try to find end code if data analysis of current data has not been finished
             if curr_data_item.data_payload:
                 self.find_end_index()
                 continue
@@ -46,18 +53,10 @@ class DataProcessingThread(Thread):
 
             if len(self.curr_data_str) < GlobalConstants.DATA_PAYLOAD_START_INDEX: continue
 
-            # extract errors
-            err = StrManipulator.extract(self.curr_data_str, GlobalConstants.ERR_CNT_START_INDEX,
-                                         GlobalConstants.ERR_CNT_END_INDEX)
-            err = Calculator.get_int(err)
-            # break if there is errors on sender side
-            if err > 0:
-                raise Exception("ERRORS ON SENDER SIDE", err)
-
             # extract buffer length
-            curr_data_item.buff_len = StrManipulator.extract(self.curr_data_str, GlobalConstants.BUF_LEN_START_INDEX,
-                                                             GlobalConstants.BUF_LEN_END_INDEX)
-            int_len = Calculator.get_int(curr_data_item.buff_len)
+            curr_data_item.packet_len = StrManipulator.extract(self.curr_data_str, GlobalConstants.PACKET_LEN_START_INDEX,
+                                                               GlobalConstants.PACKET_LEN_END_INDEX)
+            int_len = Calculator.get_int(curr_data_item.packet_len)
             # number of hex digits
             curr_data_item.len_of_hex = int_len * 2
 
@@ -121,9 +120,9 @@ class DataProcessingThread(Thread):
 
         # generate a sequence of numbers according to data buffer length
         # (number of data chunks)
-        buff_len = Calculator.get_int(curr_data_item.buff_len)
+        packet_len = Calculator.get_int(curr_data_item.packet_len)
         BYTES_PER_DATA_CHUNK = 2
-        data_payload_len = buff_len - GlobalConstants.DATA_PARAMS_LEN
+        data_payload_len = packet_len - GlobalConstants.DATA_PARAMS_LEN
         num_seq_len = data_payload_len / BYTES_PER_DATA_CHUNK
 
         # divide by 2 because of taking into account every other num
