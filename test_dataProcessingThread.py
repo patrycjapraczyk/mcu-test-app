@@ -10,7 +10,8 @@ from GlobalConstants import GlobalConstants
 
 class TestDataProcessingThread(TestCase):
     def test_run_correct(self):
-        q = self.get_correct_queue()
+        data_num = 10
+        q = self.get_correct_queue(data_num)
         data_processing_thread = DataProcessingThread(q)
         data_processing_thread.start()
         data_arr = data_processing_thread.data_storage.data_arr
@@ -19,9 +20,10 @@ class TestDataProcessingThread(TestCase):
 
         #compare the analysed data saved into data_storage
         #to the data that have been formerly generated
-        for i in range(0, 10):
+        for i in range(0, data_num):
             correct_data = self.get_correct_data(i)[1]
             curr_data = data_arr[i]
+
             self.assertEqual(correct_data.data_payload, curr_data.data_payload)
             self.assertEqual(correct_data.packet_len, curr_data.packet_len)
 
@@ -50,7 +52,7 @@ class TestDataProcessingThread(TestCase):
             correct_data = self.get_correct_data(i)[1]
             curr_data = data_arr[i]
             self.assertEqual(correct_data.data_payload, curr_data.data_payload)
-            self.assertEqual(correct_data.buff_len, curr_data.buff_len)
+            self.assertEqual(correct_data.packet_len, curr_data.packet_len)
 
     def test_no_start_index(self):
         q = Queue()
@@ -71,28 +73,28 @@ class TestDataProcessingThread(TestCase):
         self.assertRaises(Exception, data_processing_thread.run)
 
     def test_incorrect_buffer_len(self):
-        def exec_incorrect_buffer_len(buff_len):
+        def exec_incorrect_packet_len(packet_len):
             correct_data_str = self.get_correct_data()[0]
-            no_buff_len = correct_data_str[GlobalConstants.PACKET_LEN_END_INDEX + 1:]
-            data_str = GlobalConstants.START_CODE + buff_len + no_buff_len
+            no_packet_len = correct_data_str[GlobalConstants.PACKET_LEN_END_INDEX + 1:]
+            data_str = GlobalConstants.START_CODE + packet_len + no_packet_len
             q = Queue()
             q.put(data_str)
             data_processing_thread = DataProcessingThread(q)
             data_processing_thread.run()
 
-        self.assertRaises(Exception, exec_incorrect_buffer_len, "0017")
-        self.assertRaises(Exception, exec_incorrect_buffer_len, "0015")
+        self.assertRaises(Exception, exec_incorrect_packet_len, "0017")
+        self.assertRaises(Exception, exec_incorrect_packet_len, "0015")
 
     def test_unordered_data_payload(self):
         q = Queue()
-        unordered_data = self.get_data("0001333300023333")
+        unordered_data = 'aa0015000000010000666601000233330003333381'
         q.put(unordered_data)
         data_processing_thread = DataProcessingThread(q)
 
         self.assertRaises(Exception, data_processing_thread.run)
 
         q = Queue()
-        unordered_data = self.get_data("0002333300023333")
+        unordered_data = 'aa0015000000010000666601000033330000333381'
         q.put(unordered_data)
         data_processing_thread = DataProcessingThread(q)
 
@@ -136,8 +138,8 @@ class TestDataProcessingThread(TestCase):
         self.assertRaises(Exception, data_processing_thread.run)
 
     def get_correct_data(self, data_cnt=0):
-        packet_len = '0022'
-        data_cnt = Calculator.get_hex(data_cnt)
+        packet_len = '0015'
+        data_cnt = Calculator.get_hex(data_cnt, 8)
         checksum = '00006666'
         msg_code = '01'
 
@@ -146,9 +148,9 @@ class TestDataProcessingThread(TestCase):
         return correct_str, Data(data_payload, packet_len)
 
 
-    def get_correct_queue(self) -> None:
+    def get_correct_queue(self, num=10) -> None:
         q = Queue()
-        for i in range(0, 10):
+        for i in range(0, num):
             q.put(self.get_correct_data(i)[0])
         return q
 

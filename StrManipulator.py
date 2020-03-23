@@ -4,9 +4,10 @@ class StrManipulator:
         :param data: a string to be extracted
         :param start: start index of a string (int)
         :param end: end index of a string (int)
-        :return: data[start : end + 1]
+        :return: data[start : end]
         """
-        return data[start: end + 1]
+        val = data[start: end]
+        return val
 
     def remove_every_other(my_list: list) -> list:
         """

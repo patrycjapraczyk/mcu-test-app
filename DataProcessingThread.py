@@ -27,21 +27,22 @@ class DataProcessingThread(Thread):
         start_index = self.get_start_index(self.curr_data_str)
         # take another data packet off the queue if it was not found
         # and continue the search for the start code
-        while start_index < 0 :
+        while start_index < 0:
             self.curr_data_str = curr_data = self.q.get()
             start_index = self.get_start_index(self.curr_data_str)
 
         self.curr_data_str = self.curr_data_str[start_index:]
 
-        while not self._stopped :
+        while not self._stopped:
             # If there is data to be analysed from the previous data str,
             # do not take the new data off the queue
             curr_data_item = self.data_storage.curr_data
-            if len(self.curr_data_str) < GlobalConstants.AVERAGE_DATA_LEN:
+            if len(self.curr_data_str) < GlobalConstants.HEADER_LEN:
                 self.curr_data_str += self.q.get()
 
+
             # try to find end code if data analysis of current data has not been finished
-            if curr_data_item.data_payload:
+            if curr_data_item.data_payload: #if data_payload is not empty
                 self.find_end_index()
                 continue
 
@@ -84,9 +85,11 @@ class DataProcessingThread(Thread):
             self.add_data_payload(data_length)
             return False
         else:
-            # check if end code is placed in agreement with buffer length
+            # check if end code is placed in agreement with packet length
+
             expected_end_code = self.curr_data_str[
-                                end_code_index: end_code_index + GlobalConstants.START_END_CODE_LENGTH]
+                                    end_code_index: end_code_index + GlobalConstants.START_END_CODE_LENGTH]
+
             if expected_end_code == GlobalConstants.END_CODE:
                 self.add_data_payload(end_code_index)
                 self.analyse_data_payload()
