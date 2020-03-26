@@ -52,9 +52,10 @@ class TestSerialCom:
         while(len(data) < GlobalConstants.MAX_PACKET_LEN - 1 - 4):
             data.append(i >> 8 & 0xff)  # index[0]
             data.append(i & 0xff)  # index[1]
-            data.append(self.curr_data >> 8)  # msg_code[0]
-            data.append(self.curr_data)  # msg_code[1]
+            data.append(self.curr_data >> 8  & 0xff)  # msg_code[0]
+            data.append(self.curr_data  & 0xff)  # msg_code[1]
 
+            i = i + 1
             self.curr_data += 1
 
         data.append(0x81)

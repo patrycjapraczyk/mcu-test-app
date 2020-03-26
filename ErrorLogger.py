@@ -17,7 +17,7 @@ class ErrorLogger:
         # TODO: define which freq units suit the current usecase
         return time.time_ns()  # return the current time in nano_seconds since the Epoch
 
-    def log_error(self, msg, packets_received_num):
+    def log_error(self, msg, packets_received_num=1):
         self.err_cnt += 1
         curr_time = self.get_curr_time()
         freq = self.get_error_frequency()
@@ -36,9 +36,9 @@ class ErrorLogger:
         date = str(datetime.datetime.now())
         self.f_manager.file_write("\nEnded at: " + date)
 
-    def get_error_percentage(self, packets_received_num):
+    def get_error_percentage(self, packets_received_num=1):
         MULTIPLY_FACTOR = 1000000
-        percent = (MULTIPLY_FACTOR * self.err_cnt) / packets_received_num
+        percent = (MULTIPLY_FACTOR * self.err_cnt) / (packets_received_num + self.err_cnt)
         return percent
 
     def get_error_frequency(self):
