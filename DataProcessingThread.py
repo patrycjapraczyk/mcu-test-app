@@ -6,6 +6,7 @@ from Calculator import Calculator
 from DataStorage import DataStorage
 from GlobalConstants import GlobalConstants
 from StrManipulator import StrManipulator
+from ErrorLogger import ErrorLogger
 
 
 class DataProcessingThread(Thread):
@@ -15,6 +16,7 @@ class DataProcessingThread(Thread):
         self.q = queue
         self.data_storage = DataStorage()
         self.curr_data_str = ""
+        self.error_logger = ErrorLogger()
 
     def stop(self):
         self._stopped = True
@@ -50,7 +52,8 @@ class DataProcessingThread(Thread):
             expected_start_code = self.curr_data_str[:GlobalConstants.START_END_CODE_LENGTH]
             # if start index was not found
             if expected_start_code != GlobalConstants.START_CODE:
-                raise Exception("MISSING START CODE")
+                self.error_logger.log_error('MISSING START CODE', self.data_storage.data_cnt)
+                continue
 
             if len(self.curr_data_str) < GlobalConstants.DATA_PAYLOAD_START_INDEX: continue
 
@@ -97,8 +100,8 @@ class DataProcessingThread(Thread):
                 self.data_storage.save_curr_data()
             # if can't find the end code within data
             else:
-                raise Exception("MISSING END_CODE, expected_end_code: ", expected_end_code, "end_code index: ",
-                                end_code_index, " data_str: ", self.curr_data_str)
+                self.error_logger.log_error('MISSING END_CODE, expected_end_code: ' + expected_end_code + 'end_code index: ' +
+                                end_code_index + ' data_str: ' + self.curr_data_str, self.data_storage.data_cnt)
 
             return True
 
@@ -134,7 +137,7 @@ class DataProcessingThread(Thread):
         num_seq = list(range(0, num_seq_len))
 
         if index_list != num_seq:
-            raise Exception("Indices in the list were not sorted!", index_list, "num seq: ", num_seq)
+            self.error_logger.log_error('Indices in the list were not sorted! Index list: ' + str(index_list), self.data_storage.data_cnt)
 
     def check_data_index(self):
         # check if curr_data.data_index == prev_data.data_index + 1
@@ -150,14 +153,14 @@ class DataProcessingThread(Thread):
 
         if prev_index != GlobalConstants.MAX_DATA_INDEX:
             if curr_index != prev_index + 1:
-                raise Exception("Unexpected data index! Prev index:", prev_index, prev_data_item.data_index_hex , "curr data: ",
-                                curr_data_item.data_index, curr_data_item.data_index_hex ,
-                                "curr data string: ", self.curr_data_str,
-                                "queue ", self.q.queue)
+                self.error_logger.log_error("Unexpected data index! Prev index:" + prev_index + prev_data_item.data_index_hex  + "curr index: " +
+                                curr_data_item.data_index + curr_data_item.data_index_hex  +
+                                "curr data string: " + self.curr_data_str +
+                                "queue " + self.q.queue, self.data_storage.data_cnt)
         else:
             if curr_index == 0:
                 raise Exception("Unexpected data index! Prev index:", prev_index, prev_data_item.data_index_hex,
-                                "curr data: ",
-                                curr_data_item.data_index, curr_data_item.data_index_hex ,
-                                "curr data string: ", self.curr_data_str,
-                                "queue ", self.q.queue)
+                                "curr index: " +
+                                curr_data_item.data_index, curr_data_item.data_index_hex +
+                                "curr data string: " + self.curr_data_str +
+                                "queue " + self.q.queue, self.data_storage.data_cnt)

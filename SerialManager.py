@@ -4,16 +4,18 @@ import serial
 
 from queue import Queue
 from DataProcessingThread import DataProcessingThread
+from GlobalConstants import GlobalConstants
 
 
 class SerialManager:
     #alter these parameters for your own usecase
-    COM_PORT_NAME = 'COM4'
+    COM_PORT_NAME = 'COM1'
     BAUDRATE = 9600
     BYTESIZE = 8
 
     def __init__(self):
         self.q = Queue()
+        self.start_data_processing_thread()
 
     def serial_ports(self):
         """ Lists serial port names
@@ -47,28 +49,42 @@ class SerialManager:
         print(self.serial_ports())
 
     def init_connection(self):
+        """
+        opens a serial communication port
+        """
         self.serialPort = serial.Serial(self.COM_PORT_NAME, self.BAUDRATE,
                                         self.BYTESIZE, serial.PARITY_NONE, serial.STOPBITS_ONE)
 
     def start_data_processing_thread(self):
+        """
+        creates and starts data analysis thread
+        """
         # pass the data to the thread via the queue
         t = DataProcessingThread(self.q)
         t.start()
 
-    def readData(self):
+    def read_data(self):
+        """
+        reads data coming into the open communication port
+        and adds them to te thread-safe queue for data analysis
+        """
+        data = ''
         while (True):
-            data = self.serialPort.read()
-            if (data):
-                print(data)
-                data = data.hex()
-                print(data)
+            new_data = self.serialPort.read()
+            if (new_data):
+                data += new_data.hex()
                 # add the incoming data str to the queue
-                #self.q.put(data)
+                if len(data) >= GlobalConstants.MAX_PACKET_LEN:
+                    print(data)
+                    self.q.put(data)
+                    data = ''
 
 
+
+#TEST
 serial_manager = SerialManager()
 serial_manager.print_ports()
 
 #uncomment these when ready to init serial communication
-#serial_manager.init_connection()
-#serial_manager.readData()
+serial_manager.init_connection()
+serial_manager.read_data()
