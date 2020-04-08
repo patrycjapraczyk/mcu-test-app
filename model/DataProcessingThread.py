@@ -159,8 +159,8 @@ class DataProcessingThread(Thread):
                                 "queue " + self.q.queue, self.data_storage.data_cnt)
         else:
             if curr_index == 0:
-                raise Exception("Unexpected data index! Prev index:", prev_index, prev_data_item.data_index_hex,
+                raise self.error_logger.log_error("Unexpected data index! Prev index:", prev_index, prev_data_item.data_index_hex,
                                 "curr index: " +
-                                curr_data_item.data_index, curr_data_item.data_index_hex +
+                                curr_data_item.data_index + curr_data_item.data_index_hex +
                                 "curr data string: " + self.curr_data_str +
                                 "queue " + self.q.queue, self.data_storage.data_cnt)

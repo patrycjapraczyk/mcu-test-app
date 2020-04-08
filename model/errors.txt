@@ -1,0 +1,8 @@
+
+Started at: 2020-03-26 15:27:09.268444
+1. LOL
+STATS: time: 1585232829268444900, error percentage: 500000.0*10^(-4)%,
+error frequency:  <infinite frequency> 
+2. LOL2
+STATS: time: 1585232830269065600, error percentage: 500000.0*10^(-4)%,
+error frequency: 1.9987593700590048e-06GHz

@@ -1,5 +1,0 @@
-1.	Receive data
-2.	If prev_code is not empty go to 4, else find start_code index.
-3.	Extract and save buffer length and go to 4.
-4.	Search for end_code. If end_code is not in the message append data to prev_data and continue, else go to 5.
-5.	If end code index agrees with buffer length, extract data append it to prev_data and add it to data_arr and clear prev_data, else break.

@@ -1,0 +1,272 @@
+
+
+.main {
+    width: 50%;
+    height: 74%;
+    background-color: #1F2123;
+    font-color: white;
+    border-radius: 1em;
+    draggable: true;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.drop-wrapper{
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.center {
+    margin: auto;
+}
+
+.insiders {
+    float: left;
+}
+
+.menu-top {
+    border-top-left-radius: 1em;
+    background-color: rgba(56, 60, 64, 0.7);
+    height: 16%;
+    width: 70%;
+    position:absolute;
+}
+
+.content-wrapper elem1 {
+    display: block;
+    height: 20%;
+    position:relative;
+}
+
+.side-menu {
+    height: 100%;
+    width: 30%;
+    box-sizing: border-box;
+    left: 70%;
+    position: absolute;
+}
+
+.label {
+    width: 60%;
+    min-width: 150px;
+    font-color: white;
+    word-wrap: break-word;
+    padding-bottom: 1rem;
+}
+
+.upper {
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    padding-bottom: 0.5rem;
+}
+
+.lower{
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    top: 40%;
+}
+
+.side-menu .content-wrapper{
+    height: 80%;
+    width: 80%;
+    position: relative;
+    margin: auto;
+    top: 20%;
+}
+
+.left-menu {
+    top: 16%;
+    height: 72%;
+    width: 70%;
+    position: absolute;
+}
+
+.menu-bottom {
+    height: 12%;
+    width: 70%;
+    top: 88%;
+    position: absolute;
+    float: bottom;
+}
+
+.pop-up-menu {
+    background-color: rgba(198, 202, 207, 0.4);
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+}
+
+table {
+    margin-top: 1em;
+    height: 90%;
+    width: 70%;
+}
+
+
+thead > tr {
+    position: relative;
+    display: block;
+    padding-bottom: 1em;
+}
+
+tbody {
+    display: block;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+td, th {
+    text-align: left;
+    padding: 0.3em 2em;
+}
+
+tr:not(.table-head){
+    cursor: pointer;
+}
+
+tr:nth-child(even) {
+    background-color: rgba(127, 138, 138, 0.1);
+}
+
+tr:nth-child(even):hover {
+    background-color: rgba(127, 138, 138, 0.2);
+}
+
+tr:nth-child(odd):not(.table-head) {
+    background-color: rgba(127, 138, 138, 0.4);
+}
+
+tr:nth-child(odd):not(.table-head):hover {
+    background-color: rgba(127, 138, 138, 0.5);
+}
+
+.button.stop {
+    width: 74px;
+    height: 74px;
+    border-style: solid;
+    border-width: 37px;
+    border-color: black;
+    background-color: darkred;
+}
+
+.button-red {
+  background-color: rgba(225, 66, 35, 0.8);
+    margin-top: 7em;
+    margin-left:3rem;
+}
+
+.button-red:hover {
+    background-color: rgba(225, 66, 35, 1);
+}
+
+.elem2{
+    display: inline-block;
+}
+
+.button-download{
+    background-color: rgba(35, 67, 217, 0.8);
+    margin-left: 2rem;
+    padding: 0.8em;
+}
+
+.button-status{
+    background-color: rgba(245, 229, 27, 0.8);
+    color: black;
+    margin-left: 2rem;
+    padding: 0.8em;
+}
+
+.button-download:hover{
+    background-color: rgba(35, 67, 217, 1);
+}
+
+#status{
+    height: 25px;
+    padding: 5px 0px 5px 10px;
+    display: inline-block;
+    margin-left: 1rem;
+    margin-right:0;
+    border-right: 0;
+}
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-top: 35px solid transparent;
+  border-bottom: 35px solid transparent;
+  border-left: 35px solid yellow;
+}
+
+.warning{
+    color: black;
+    background-color: yellow;
+}
+
+#wrong-data {
+background-color:
+    rgba(225, 66, 35, 0.8);
+}
+
+#wrong-data:hover {
+background-color:
+    rgba(225, 66, 35, 1);
+}
+
+scroll-tbody-y { height:80px; overflow:auto;}
+
+.fa-stop {
+    color: rgba(225, 66, 35, 1);
+}
+
+.fa-cog {
+    color: white;
+}
+
+.button-icon {
+    background-color:  rgba(31, 33, 35, 0.7);
+    padding: 0.8em;
+    margin-top: 1.5em;
+    margin-left: 1em;
+    margin-right: 0;
+    border-radius: 30%;
+    display: inline-block;
+}
+
+.button-icon:hover {
+    background-color: rgba(31, 33, 35, 1);
+}
+
+.close {
+    -moz-border-radius-topright: 1em;
+    height: 5%;
+    width: 5%;
+    font-size: 2rem;
+    float: right;
+    margin-top: 0.5rem;
+    margin-right: 2rem;
+    opacity: 60%;
+}
+
+.hidden {
+    display: none;
+}
+
+.close:hover {
+    opacity: 100%;
+    cursor: pointer;
+}
+
+.bottom-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.text-side{
+    position: relative;
+    width: 70%;
+    height: 10%;
+    margin: 2em;
+}

@@ -1,2 +1,0 @@
-acqData[32768] - dlugosc buffora danych przekazywanych do stosu, które napelnia przetwornik.
-dlugosc jest uzyskiwana przez 2^N uwarunkowana pamiecia procesora

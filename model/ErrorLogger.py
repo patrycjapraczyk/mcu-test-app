@@ -52,7 +52,7 @@ class ErrorLogger:
         return freq
 
 # TEST
-# logger = ErrorLogger()
-# logger.log_error("LOL", 1)
-# time.sleep(1)
-# logger.log_error("LOL2", 2)
+logger = ErrorLogger()
+logger.log_error("LOL", 1)
+time.sleep(1)
+logger.log_error("LOL2", 2)
