@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html>
-<header>
-    <title>MCU_Test</title>
-    <script src="https://kit.fontawesome.com/011a299524.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../static/css/styles.css">
-    <link rel="stylesheet" href="../static/css/common.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script type="text/javascript" src="../static/lib/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" src="../static/js/drop-down.js" async></script>
-</header>
-<body>
+{% extends 'base.html' %}
+{% block css %}
+   <link rel="stylesheet" href="../static/css/styles.css">
+{% endblock %}
+{% block body %}
 <div draggable="true" class="main center">
     <span class="menu-top insiders">
         <button class="button-icon"><i class="fas fa-stop"></i></button>
@@ -39,96 +32,6 @@
                 <td>1.15</td>
                 <td>0x3423432423432443</td>
             </tr>
-            <tr>
-                <td>2.</td>
-                <td>1.6</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr id="wrong-data">
-                <td>3.</td>
-                <td>1.65</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>4.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>5.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>6.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>7.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>8.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>9.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>10.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>11.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>12.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>13.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>14.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>15.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>16.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>17.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>18.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
-            <tr>
-                <td>19.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
             </tbody>
         </table>
     </span>
@@ -139,7 +42,7 @@
         <div class="close"><i class="fas fa-times"></i></div>
         <div class="content-wrapper">
             <div class="elem1">
-            <div class="label centered">Heartbeat Frequency [Hz]:</div>
+            <div class="label centered">Heartbeat Period [ms]:</div>
             <div class="drop-wrapper">
                 <div class="drop-down-select centered">
                     <select>
@@ -176,6 +79,7 @@
         </button>
             <button class="elem2 button-status">Status: Warning
         </button>
+        </div>
         <!--    <div class="status-wrapper elem2">
         <div id="status" class=" warning">Status: Warning</div>
         <div class="arrow-right "></div>
@@ -183,5 +87,4 @@
         </div> --->
     </span>
 </div>
-</body>
-</html>
+{% endblock %}

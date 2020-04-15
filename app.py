@@ -20,7 +20,7 @@ def start_post():
     baudrate = request.form.get('baudrate')
     if serial_port and baudrate:
         return redirect(url_for('index', serial_port=serial_port, baudrate=baudrate))
-    # TODO: else show the warning thingy
+    # TODO: else show the warning pop-up and do not redirect
 
 
 @app.route('/index', methods=['GET'])

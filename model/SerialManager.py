@@ -84,6 +84,9 @@ class SerialManager:
                     self.q.put(data)
                     data = ''
 
+    #def send_data(self, data_packet):
+
+
 
 
 #TEST
