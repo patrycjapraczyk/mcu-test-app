@@ -1,4 +1,4 @@
-from Data import Data
+from model.Data import Data
 
 
 class DataStorage:

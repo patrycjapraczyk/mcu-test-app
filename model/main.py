@@ -1,4 +1,4 @@
-from ComInterfaceFactory import ComInterfaceFactory
+from model.ComInterfaceFactory import ComInterfaceFactory
 
 INTERFACE_TYPE = 'SERIAL'
 

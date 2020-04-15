@@ -1,5 +1,5 @@
-from ETHSocketManager import ETHSocketManager
-from SerialManager import SerialManager
+from model.ETHSocketManager import ETHSocketManager
+from model.SerialManager import SerialManager
 
 class ComInterfaceFactory:
     def get_interface(self, type):

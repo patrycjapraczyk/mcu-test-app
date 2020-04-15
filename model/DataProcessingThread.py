@@ -1,12 +1,11 @@
 from queue import Queue
 from threading import Thread
-import threading
 
-from Calculator import Calculator
-from DataStorage import DataStorage
-from GlobalConstants import GlobalConstants
-from StrManipulator import StrManipulator
-from ErrorLogger import ErrorLogger
+from model.Calculator import Calculator
+from model.DataStorage import DataStorage
+from model.GlobalConstants import GlobalConstants
+from model.StrManipulator import StrManipulator
+from model.ErrorLogger import ErrorLogger
 
 
 class DataProcessingThread(Thread):

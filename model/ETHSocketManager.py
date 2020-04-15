@@ -1,9 +1,8 @@
 import socket
 from queue import Queue
-from threading import Thread
 
-from DataProcessingThread import DataProcessingThread
-from GlobalConstants import GlobalConstants
+from model.DataProcessingThread import DataProcessingThread
+from model.GlobalConstants import GlobalConstants
 
 
 class ETHSocketManager:

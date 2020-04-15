@@ -1,7 +1,7 @@
 import serial
 import time
 
-from GlobalConstants import GlobalConstants
+from model.GlobalConstants import GlobalConstants
 
 class TestSerialCom:
     COM_PORT_NAME = 'COM2'

@@ -1,4 +1,4 @@
-from Calculator import Calculator
+from model.Calculator import Calculator
 
 
 class Data:

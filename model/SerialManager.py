@@ -3,21 +3,20 @@ import glob
 import serial
 
 from queue import Queue
-from DataProcessingThread import DataProcessingThread
-from GlobalConstants import GlobalConstants
+from model.DataProcessingThread import DataProcessingThread
+from model.GlobalConstants import GlobalConstants
 
 
 class SerialManager:
     #alter these parameters for your own usecase
-    COM_PORT_NAME = 'COM1'
-    BAUDRATE = 9600
     BYTESIZE = 8
 
     def __init__(self):
         self.q = Queue()
         self.start_data_processing_thread()
 
-    def serial_ports(self):
+    @staticmethod
+    def serial_ports():
         """ Lists serial port names
 
             :raises EnvironmentError:
@@ -45,14 +44,20 @@ class SerialManager:
                 pass
         return result
 
-    def print_ports(self):
-        print(self.serial_ports())
+    @staticmethod
+    def baudrates():
+        """
+        :return: returns a list of convenient baudrate values
+        """
+        return [56000, 115200, 57600, 19200, 9600]
 
-    def init_connection(self):
+
+    def init_connection(self, port, baudrate):
         """
         opens a serial communication port
         """
-        self.serialPort = serial.Serial(self.COM_PORT_NAME, self.BAUDRATE,
+        if port in self.serial_ports():
+            self.serialPort = serial.Serial(port, baudrate,
                                         self.BYTESIZE, serial.PARITY_NONE, serial.STOPBITS_ONE)
 
     def start_data_processing_thread(self):
@@ -82,9 +87,9 @@ class SerialManager:
 
 
 #TEST
-serial_manager = SerialManager()
-serial_manager.print_ports()
+#serial_manager = SerialManager()
+#serial_manager.print_ports()
 
 #uncomment these when ready to init serial communication
-serial_manager.init_connection()
-serial_manager.read_data()
+#serial_manager.init_connection()
+#serial_manager.read_data()
