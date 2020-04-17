@@ -13,6 +13,7 @@ class SerialManager:
 
     def __init__(self):
         self.q = Queue()
+        self.sent_counter = 0
         self.start_data_processing_thread()
 
     @staticmethod
@@ -57,8 +58,8 @@ class SerialManager:
         opens a serial communication port
         """
         if port in self.serial_ports():
-            self.serialPort = serial.Serial(port, baudrate,
-                                        self.BYTESIZE, serial.PARITY_NONE, serial.STOPBITS_ONE)
+            self.serial_port = serial.Serial(port, baudrate,
+                                             self.BYTESIZE, serial.PARITY_NONE, serial.STOPBITS_ONE)
 
     def start_data_processing_thread(self):
         """
@@ -75,7 +76,7 @@ class SerialManager:
         """
         data = ''
         while (True):
-            new_data = self.serialPort.read()
+            new_data = self.serial_port.read()
             if (new_data):
                 data += new_data.hex()
                 # add the incoming data str to the queue
@@ -84,10 +85,14 @@ class SerialManager:
                     self.q.put(data)
                     data = ''
 
-    #def send_data(self, data_packet):
-
-
-
+    def send_data_packet(self, data):
+        """
+        send a data packet to the open
+        serial communication port
+        :param data: data to be sent
+        """
+        self.serial_port.write(data)
+        self.sent_counter += 1
 
 #TEST
 #serial_manager = SerialManager()

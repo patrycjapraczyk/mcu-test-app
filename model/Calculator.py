@@ -1,4 +1,5 @@
 class Calculator:
+    @staticmethod
     def get_int(hexnum: str) -> int:
         """
         :param hexnum: (str) a hexdecimal number
@@ -7,6 +8,7 @@ class Calculator:
         HEX_BASE = 16
         return int(hexnum, HEX_BASE)
 
+    @staticmethod
     def get_hex(decnum: int, num_hex=8) -> str:
         """
         :param decnum: (int) a decimal number,
@@ -18,3 +20,19 @@ class Calculator:
         while len(hex_num) != num_hex:
             hex_num = "0" + hex_num
         return hex_num
+
+    @staticmethod
+    def get_bytearray(decnum: int) -> bytearray:
+        """
+        :param decnum: (int) a decimal number,
+        :return: a bytearray representation od decnum (int)
+        """
+        bitlen = decnum.bit_length()
+        bytelen = int(bitlen / 8)
+        if bitlen % 8 != 0:
+            bytelen += 1
+        if decnum == 0:
+           bytelen = 1
+        bytes = decnum.to_bytes(bytelen, byteorder='big')
+        byte_array = bytearray(bytes)
+        return byte_array
