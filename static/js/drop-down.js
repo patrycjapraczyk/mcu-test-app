@@ -1,6 +1,4 @@
 $(document).ready( function() {
-    console.log("WORKING");
-
     $('.drop-down-select').each(function () {
             $(this).append("<div class='select-selected'>"
                 + $(this).find('select option:selected').text()
@@ -33,7 +31,6 @@ $(document).ready( function() {
 
     $('.select-selected').on("click", function (e) {
         e.stopPropagation();
-        console.log("click");
         $(this).toggleClass('select-arrow-active');
         $(this).toggleClass('open');
         $(this).closest('.drop-down-select').find('.select-items').toggleClass('select-hide');

@@ -2,6 +2,9 @@
 {% block css %}
    <link rel="stylesheet" href="../static/css/styles.css">
 {% endblock %}
+{% block scripts %}
+    <script src="{{url_for('static', filename='./js/side_menu.js')}}"></script>
+{% endblock %}
 {% block body %}
 <div draggable="true" class="main center">
     <span class="menu-top insiders">
@@ -35,8 +38,8 @@
             </tbody>
         </table>
     </span>
-    <span class="side-menu insiders center hidden">
-        <button class="button-red">Reset request</button>
+    <span class="side-menu insiders center">
+        <button id="reset" class="button-red">Reset request</button>
     </span>
     <span id="settings" class="side-menu pop-up-menu insiders center hidden">
         <div class="close"><i class="fas fa-times"></i></div>
@@ -64,7 +67,7 @@
                 </div>
         </div>
     </span>
-    <span id="info" class="side-menu insiders center pop-up-menu">
+    <span id="info" class="side-menu insiders center pop-up-menu hidden">
         <div class="close"><i class="fas fa-times"></i></div>
         <div class="content-wrapper">
             <div class="text-side">Index: 1</div>
