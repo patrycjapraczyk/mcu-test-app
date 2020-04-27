@@ -3,9 +3,13 @@ from threading import Thread
 
 from model.Calculator import Calculator
 from model.DataStorage import DataStorage
+from model.Data import Data
 from model.GlobalConstants import GlobalConstants
 from model.StrManipulator import StrManipulator
-from model.ErrorLogger import ErrorLogger
+from model.ComErrorLogger import ComErrorLogger
+from model.Checksum import Checksum
+from model.ComErrorStorage import ComErrorStorage
+from model.ComError import ComError
 
 
 class DataProcessingThread(Thread):
@@ -14,8 +18,8 @@ class DataProcessingThread(Thread):
         self._stopped = False
         self.q = queue
         self.data_storage = DataStorage()
+        self.com_error_storage = ComErrorStorage()
         self.curr_data_str = ""
-        self.error_logger = ErrorLogger()
 
     def stop(self):
         self._stopped = True
@@ -41,7 +45,6 @@ class DataProcessingThread(Thread):
             if len(self.curr_data_str) < GlobalConstants.HEADER_LEN:
                 self.curr_data_str += self.q.get()
 
-
             # try to find end code if data analysis of current data has not been finished
             if curr_data_item.data_payload: #if data_payload is not empty
                 self.find_end_index()
@@ -51,24 +54,14 @@ class DataProcessingThread(Thread):
             expected_start_code = self.curr_data_str[:GlobalConstants.START_END_CODE_LENGTH]
             # if start index was not found
             if expected_start_code != GlobalConstants.START_CODE:
-                self.error_logger.log_error('MISSING START CODE', self.data_storage.data_cnt)
+                com_error = ComError('MISSING START CODE', self.curr_data_str)
+                self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
                 continue
 
             if len(self.curr_data_str) < GlobalConstants.DATA_PAYLOAD_START_INDEX: continue
 
-            # extract buffer length
-            curr_data_item.packet_len = StrManipulator.extract(self.curr_data_str, GlobalConstants.PACKET_LEN_START_INDEX,
-                                                               GlobalConstants.PACKET_LEN_END_INDEX)
-            int_len = Calculator.get_int(curr_data_item.packet_len)
-            # number of hex digits
-            curr_data_item.len_of_hex = int_len * 2
-
-            # extract data counter
-            data_index = StrManipulator.extract(self.curr_data_str, GlobalConstants.DATA_COUNTER_START_INDEX,
-                                                GlobalConstants.DATA_COUNTER_END_INDEX)
-
-            curr_data_item.data_index = Calculator.get_int(data_index)
-            curr_data_item.data_index_hex = data_index
+            header_str = self.curr_data_str[:GlobalConstants.DATA_PAYLOAD_START_INDEX]
+            self.curr_data_item.add_header_info(header_str)
 
             # remove all all data that has been analysed and saved already
             self.curr_data_str = self.curr_data_str[GlobalConstants.DATA_PAYLOAD_START_INDEX:]
@@ -88,19 +81,19 @@ class DataProcessingThread(Thread):
             return False
         else:
             # check if end code is placed in agreement with packet length
-
             expected_end_code = self.curr_data_str[
                                     end_code_index: end_code_index + GlobalConstants.START_END_CODE_LENGTH]
 
             if expected_end_code == GlobalConstants.END_CODE:
                 self.add_data_payload(end_code_index)
-                self.analyse_data_payload()
+                self.analyse_data_payload(self.data_storage.curr_data)
                 self.check_data_index()
+                self.verify_checksum()
                 self.data_storage.save_curr_data()
             # if can't find the end code within data
             else:
-                self.error_logger.log_error('MISSING END_CODE, expected_end_code: ' + expected_end_code + 'end_code index: ' +
-                                end_code_index + ' data_str: ' + self.curr_data_str, self.data_storage.data_cnt)
+                com_error = ComError('MISSING END CODE', self.curr_data_str)
+                self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
 
             return True
 
@@ -112,13 +105,13 @@ class DataProcessingThread(Thread):
         # remove the analysed data from curr_data_str
         self.curr_data_str = self.curr_data_str[end_index + GlobalConstants.START_END_CODE_LENGTH:]
 
-    def analyse_data_payload(self):
-        curr_data_item = self.data_storage.curr_data
+    def analyse_data_payload(self, curr_data_item):
         data_payload = curr_data_item.data_payload
-        index_list = []
+
         # split the data string into chunks of length 4
-        for i in range(0, len(data_payload) - GlobalConstants.DATA_BLOCK_LEN_HEX, GlobalConstants.DATA_BLOCK_LEN_HEX):
-            index_list.append(data_payload[i:i + GlobalConstants.DATA_BLOCK_LEN_HEX])
+        index_list = StrManipulator.split_string(data_payload, GlobalConstants.PAYLOAD_INDICES_LEN)
+        if not index_list:
+            return True
 
         index_list = StrManipulator.remove_every_other(index_list)
         index_list = list(map(Calculator.get_int, index_list))
@@ -136,30 +129,37 @@ class DataProcessingThread(Thread):
         num_seq = list(range(0, num_seq_len))
 
         if index_list != num_seq:
-            self.error_logger.log_error('Indices in the list were not sorted! Index list: ' + str(index_list), self.data_storage.data_cnt)
+            com_error = ComError('UNORDERED DATA CONTENT', self.data_storage.curr_data.complete_data)
+            self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+            return False
+
+        return True
 
     def check_data_index(self):
         # check if curr_data.data_index == prev_data.data_index + 1
         curr_data_item = self.data_storage.curr_data
-        all_data = self.data_storage.data_arr
+        prev_data_item = self.data_storage.prev_data
 
-        if len(all_data) == 0:
+        if not prev_data_item:
             return True
 
-        prev_data_item = all_data[-1]
         curr_index = curr_data_item.data_index
         prev_index = prev_data_item.data_index
 
         if prev_index != GlobalConstants.MAX_DATA_INDEX:
             if curr_index != prev_index + 1:
-                self.error_logger.log_error("Unexpected data index! Prev index:" + prev_index + prev_data_item.data_index_hex  + "curr index: " +
-                                curr_data_item.data_index + curr_data_item.data_index_hex  +
-                                "curr data string: " + self.curr_data_str +
-                                "queue " + self.q.queue, self.data_storage.data_cnt)
+                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data)
+                self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+                return False
         else:
-            if curr_index == 0:
-                raise self.error_logger.log_error("Unexpected data index! Prev index:", prev_index, prev_data_item.data_index_hex,
-                                "curr index: " +
-                                curr_data_item.data_index + curr_data_item.data_index_hex +
-                                "curr data string: " + self.curr_data_str +
-                                "queue " + self.q.queue, self.data_storage.data_cnt)
+            if curr_index != 0:
+                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data)
+                self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+                return False
+        return True
+
+    def verify_checksum(self, data: Data):
+        data_int = Calculator.get_int(data.complete_data)
+        expected_checksum = Checksum.crc32(data_int)
+        return data.checksum == expected_checksum
+

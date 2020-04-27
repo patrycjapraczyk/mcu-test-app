@@ -1,19 +1,43 @@
 from model.Calculator import Calculator
+from model.GlobalConstants import GlobalConstants
+from model.StrManipulator import StrManipulator
 
 
 class Data:
-    def __init__(self, complete_data="", data_payload="", packet_len="", checksum="", msg_code=""):
-        self.complete_data = complete_data
-        self.data_payload = data_payload
-        self.payload_len = len(data_payload)
-        self.packet_len = packet_len
-        self.checksum = checksum
-        self.msg_code = msg_code
-        #number of digits in hexadecimal representation
-        if packet_len:
-            self.len_of_hex = Calculator.get_int(packet_len) * 2
-        else:
-            self.len_of_hex = 0
+    def __init__(self):
+        self.complete_data = ''
+        self.data_payload = ''
+        self.payload_len = 0
+        self.packet_len = ''
+        self.checksum = ''
+        self.msg_code = ''
+        self.data_index = 0
+        self.data_index_hex = ''
+        self.len_of_hex = 0 #number of digits in hexadecimal representation
 
     def to_str(self):
         return str(vars(self))
+
+    def add_header_info(self, data_header: str):
+        self.extract_packet_length(data_header)
+        self.extract_data_counter(data_header)
+        self.extract_message_code(data_header)
+
+    def extract_packet_length(self, data_header: str):
+        self.packet_len = StrManipulator.substring(data_header, GlobalConstants.PACKET_LEN_START_INDEX,
+                                                   GlobalConstants.PACKET_LEN_END_INDEX)
+        int_len = Calculator.get_int(self.packet_len)
+        # number of hex digits
+        self.len_of_hex = int_len * 2
+
+    def extract_message_code(self, data_header: str):
+        msg_code = StrManipulator.substring(data_header, GlobalConstants.MSG_CODE_START_INDEX,
+                                            GlobalConstants.MSG_CODE_END_INDEX)
+        msg_code = Calculator.get_int(msg_code)
+        self.msg_code = msg_code
+
+    def extract_data_counter(self, data_header: str):
+        data_index = StrManipulator.substring(data_header, GlobalConstants.DATA_COUNTER_START_INDEX,
+                                              GlobalConstants.DATA_COUNTER_END_INDEX)
+        self.data_index = Calculator.get_int(data_index)
+        self.data_index_hex = data_index
