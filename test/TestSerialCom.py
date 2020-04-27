@@ -70,7 +70,6 @@ class TestSerialCom:
         serial communication port
         """
         data_arr = self.generate_packet()
-        length = len(data_arr)
         data = bytes(data_arr)
         self.serial_port.write(data)
 
