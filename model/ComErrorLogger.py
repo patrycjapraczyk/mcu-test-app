@@ -3,13 +3,14 @@ from model.ComError import ComError
 from model.Time import Time
 
 
-class ComErrorLogger():
+class ComErrorLogger:
     FILE_NAME = 'com_errors.txt'
 
     def __init__(self):
         #self.start = self.get_curr_time()
         self.logger = Logger(self.FILE_NAME)
         self.start = Time.get_curr_time_ns()
+        self.logger.log('COMMUNICATION ERRORS:\n')
 
     def log_error(self, error: ComError, err_cnt, packets_received_num=1):
         freq = self.get_error_frequency(err_cnt, error.time)

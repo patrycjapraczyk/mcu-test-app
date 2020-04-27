@@ -3,12 +3,14 @@ from model.StrManipulator import StrManipulator
 from model.GlobalConstants import GlobalConstants
 from model.Calculator import Calculator
 from model.StrManipulator import StrManipulator
+from model.Time import Time
 
 
 class MemErrorData:
     def __init__(self, data: str):
         self.data = data
         self.faulty_addresses = []
+        self.time = Time.get_curr_time()
         self.mem_error_id = 0
         self.error_num = 0
         self.overflow = False
@@ -18,7 +20,6 @@ class MemErrorData:
         self.extract_err_cnt()
         self.check_overflow()
         self.extract_addresses()
-
 
     def clean_data_indices(self):
         self.data = StrManipulator.split_string(self.data, GlobalConstants.PAYLOAD_INDICES_LEN)
