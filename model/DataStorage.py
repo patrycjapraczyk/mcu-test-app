@@ -1,15 +1,15 @@
 from model.Data import Data
 from model.MemErrorStorage import MemErrorStorage
-from model.MemErrorData import MemErrorData
 
 
-class DataStorage:
+class DataStorage():
+
     def __init__(self):
         self.prev_data = None
         self.data_arr = []
         self.mem_error_storage = MemErrorStorage()
-
         self.curr_data = Data()
+        self.last_heartbeat = None
         self.data_cnt = 0
 
     def save_curr_data(self):

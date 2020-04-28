@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, redirect, request, url_for
 
-from controller.Start_controller import StartController
+from controller.StartController import StartController
 from controller.MainController import MainController
 
 app = Flask(__name__)
@@ -30,14 +30,17 @@ def start_test():
     main_controller.start_test(serial_port, baudrate)
     return redirect(url_for('index'))
 
+
 @app.route('/index')
 def index():
     return render_template("index.html")
+
 
 @app.route('/reset', methods=['GET'])
 def reset():
     main_controller.send_rest_request()
     return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run()

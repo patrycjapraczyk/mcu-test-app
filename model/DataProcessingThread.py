@@ -6,20 +6,32 @@ from model.DataStorage import DataStorage
 from model.Data import Data
 from model.GlobalConstants import GlobalConstants
 from model.StrManipulator import StrManipulator
-from model.ComErrorLogger import ComErrorLogger
 from model.Checksum import Checksum
 from model.ComErrorStorage import ComErrorStorage
 from model.ComError import ComError
 
+from model.Observer.Observer import Observer
+from model.Observer.Subject import Subject
 
-class DataProcessingThread(Thread):
-    def __init__(self, queue: Queue):
+
+class DataProcessingThread(Thread, Subject):
+    def __init__(self, queue: Queue, com_error_storage: ComErrorStorage):
         Thread.__init__(self)
         self._stopped = False
         self.q = queue
         self.data_storage = DataStorage()
-        self.com_error_storage = ComErrorStorage()
+        self.com_error_storage = com_error_storage
         self.curr_data_str = ""
+        self.last_heartbeat = None
+
+    def notify(self) -> None:
+        self.observer.update(self)
+
+    def detach(self) -> None:
+        self._observer = None
+
+    def attach(self, observer: Observer) -> None:
+        self._observer = observer
 
     def stop(self):
         self._stopped = True
@@ -86,9 +98,10 @@ class DataProcessingThread(Thread):
 
             if expected_end_code == GlobalConstants.END_CODE:
                 self.add_data_payload(end_code_index)
-                self.analyse_data_payload(self.data_storage.curr_data)
+                self.analyse_data_payload(curr_data_item)
                 self.check_data_index()
                 self.verify_checksum()
+                self.check_heartbeat(curr_data_item)
                 self.data_storage.save_curr_data()
             # if can't find the end code within data
             else:
@@ -96,6 +109,11 @@ class DataProcessingThread(Thread):
                 self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
 
             return True
+
+    def check_heartbeat(self, curr_data_item: Data):
+        if curr_data_item.msg_code == 'HEARTBEAT':
+            self.heartbeat_received_id = curr_data_item.data_payload
+            self.notify()
 
     def add_data_payload(self, end_index):
         curr_data_item = self.data_storage.curr_data
