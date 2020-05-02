@@ -5,6 +5,7 @@ from model.StrManipulator import StrManipulator
 
 class Data:
     def __init__(self):
+        self.time = ''
         self.complete_data = ''
         self.data_payload = ''
         self.payload_len = 0

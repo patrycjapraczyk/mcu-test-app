@@ -36,6 +36,8 @@ class GlobalConstants:
     HEX_BASE = 168
     MAX_DATA_INDEX = HEX_BASE ^ (DATA_INDEX_LENGTH) - 1
 
+    HEARTBEAT_LEN = 18 * HEX_DIGITS_PER_BYTE
+
     MESSAGE_CODE_DICT = {
         'HEARTBEAT_REQUEST': 0x00,
         'HEARTBEAT_RESPONSE': 0x01,
@@ -67,3 +69,21 @@ class GlobalConstants:
     MEM_ADDRESSES_LEN = MEM_ADDRESS_LEN_BYTE * HEX_DIGITS_PER_BYTE
 
     ADDRESS_BYTE_NUM = 3
+
+    HEARTBEAT_ID_START = 13 * HEX_DIGITS_PER_BYTE
+    HEARTBEAT_ID_END = (13 + 4) * HEX_DIGITS_PER_BYTE
+    HEART_BEAT_LEN = 17 * HEX_DIGITS_PER_BYTE
+
+    HEARTBEAT_PERIODS = {
+        0: 100,
+        1: 250,
+        2: 500,
+        3: 1000
+    }
+
+    ECC_CHECK_PERIODS = {
+        100: 0,
+        1000: 1,
+        10000: 2,
+        60000: 3
+    }

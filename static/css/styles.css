@@ -1,7 +1,7 @@
 
 
 .main {
-    width: 50%;
+    width: 70%;
     height: 74%;
     background-color: #1F2123;
     font-color: white;
@@ -32,10 +32,11 @@
     position:absolute;
 }
 
-.content-wrapper elem1 {
+.elem1 {
     display: block;
     height: 20%;
     position:relative;
+    margin: 1.5em;
 }
 
 .side-menu {
@@ -47,11 +48,10 @@
 }
 
 .label {
-    width: 60%;
-    min-width: 150px;
     font-color: white;
     word-wrap: break-word;
     padding-bottom: 1rem;
+    text-align: center;
 }
 
 .upper {
@@ -70,11 +70,11 @@
 }
 
 .side-menu .content-wrapper{
-    height: 80%;
+    height: 90%;
     width: 80%;
     position: relative;
     margin: auto;
-    top: 20%;
+    top: 7%;
 }
 
 .left-menu {
@@ -102,13 +102,15 @@ table {
     margin-top: 1em;
     height: 90%;
     width: 70%;
+    position: absolute;
 }
-
 
 thead > tr {
     position: relative;
     display: block;
     padding-bottom: 1em;
+    width: 100%;
+
 }
 
 tbody {
@@ -216,6 +218,8 @@ background-color:
 
 scroll-tbody-y { height:80px; overflow:auto;}
 
+scroll-tbody-x { width: 60px; overflow: auto;}
+
 .fa-stop {
     color: rgba(225, 66, 35, 1);
 }
@@ -269,4 +273,20 @@ scroll-tbody-y { height:80px; overflow:auto;}
     width: 70%;
     height: 10%;
     margin: 2em;
+}
+
+.table-wrapper {
+    position: relative;
+    height: 90%;
+    width: 70%;
+}
+
+.button-ok {
+    background-color: rgba(20, 150, 35, 0.7);
+    position: relative;
+    margin: auto;
+}
+
+.button-ok:hover {
+    background-color: rgba(20, 150, 35, 1);
 }

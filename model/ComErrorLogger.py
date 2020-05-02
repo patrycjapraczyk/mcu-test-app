@@ -13,12 +13,12 @@ class ComErrorLogger:
         self.logger.log('COMMUNICATION ERRORS:\n')
 
     def log_error(self, error: ComError, err_cnt, packets_received_num=1):
-        freq = self.get_error_frequency(err_cnt, error.time)
         err_percent = self.get_error_percentage(err_cnt, packets_received_num)
         msg = '\n' + str(err_cnt) + '. ' + error.type
         msg += ' for ' + error.packet + '\n'
         msg += 'STATS: time: ' + str(Time.get_curr_time())
         msg += ', error percentage: ' + str(err_percent) + '*10^(-3)%,\n'
+        freq = self.get_error_frequency(err_cnt, error.time)
         msg += 'error frequency: ' + freq
         self.logger.log(msg)
 

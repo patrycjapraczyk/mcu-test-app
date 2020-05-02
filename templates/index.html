@@ -1,20 +1,21 @@
 {% extends 'base.html' %}
 {% block css %}
-   <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
 {% endblock %}
 {% block scripts %}
-    <script src="{{url_for('static', filename='./js/side_menu.js')}}"></script>
+    <script src="{{ url_for('static', filename='./js/side_menu.js') }}"></script>
+    <script src="{{ url_for('static', filename='./js/settings.js') }}"></script>
 {% endblock %}
 {% block body %}
-<div draggable="true" class="main center">
+    <div draggable="true" class="main center">
     <span class="menu-top insiders">
         <button class="button-icon"><i class="fas fa-stop"></i></button>
-        <button class="button-icon"><i class="fas fa-cog"></i></button>
+        <button id="settings-button" class="button-icon"><i class="fas fa-cog"></i></button>
         <button class="button-icon">reset&nbsp;<i class="fas fa-info-circle"></i></button>
         <button class="button-icon">mem-error&nbsp;<i class="fas fa-info-circle"></i></button>
         <button class="button-icon">com-error&nbsp;<i class="fas fa-info-circle"></i></button>
     </span>
-    <span class="left-menu insiders">
+        <span class="left-menu insiders">
         <table CELLSPACING=0 class="insiders">
             <thead>
             <tr class="table-head">
@@ -30,44 +31,59 @@
             </tr>
             </thead>
             <tbody class="scroll-tbody-y">
-            <tr>
-                <td>1.</td>
-                <td>1.15</td>
-                <td>0x3423432423432443</td>
-            </tr>
+            {% for data in data_packets %}
+                <tr>
+                    <td>{{ loop.index }}.</td>
+                    <td>{{ data.time }}</td>
+                    <td>{{ '0x' + data.complete_data }}</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </span>
-    <span class="side-menu insiders center">
+        <span id="control-panel" class="side-menu insiders center">
         <button id="reset" class="button-red">Reset request</button>
     </span>
     <span id="settings" class="side-menu pop-up-menu insiders center hidden">
-        <div class="close"><i class="fas fa-times"></i></div>
-        <div class="content-wrapper">
+        <div id="close-settings" class="close"><i class="fas fa-times"></i></div>
+        <form class="content-wrapper" method="POST" action="{{ url_for('settings') }}">
             <div class="elem1">
-            <div class="label centered">Heartbeat Period [ms]:</div>
-            <div class="drop-wrapper">
+                <div class="label centered">Heartbeat Period [ms]:</div>
                 <div class="drop-down-select centered">
-                    <select>
-                        <option value="100">100</option>
-                        <option value="500">500</option>
-                        <option value="1000">1000</option>
+                    <select name="heartbeat_period">
+                        {% for period in heartbeat_periods %}
+                            <option value={{ period }}>{{ period }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                </div>
+            <div class="elem1">
+                <div class="label centered">ECC_check Period [ms]:</div>
+                <div class="drop-down-select centered">
+                    <select name="ecc_period">
+                        {% for period in ecc_check_periods %}
+                            <option value={{period}}>{{period}}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
-                </div>
+        <!--
             <div class="elem1">
-            <div class="label centered">Data format:</div>
-            <div class="drop-down-select centered">
+                <div class="label centered">Data format:</div>
+                <div class="drop-down-select centered">
                     <select>
                         <option value="HEX">HEX</option>
                         <option value="BIN">BIN</option>
                     </select>
                 </div>
-                </div>
-        </div>
+            </div>
+            -->
+            <div class="elem1">
+                <button class="button-ok"><b>OK &nbsp;</b><i class="fas fa-check"></i></button>
+            </div>
+        </form>
     </span>
-    <span id="info" class="side-menu insiders center pop-up-menu hidden">
+        <span id="info" class="side-menu insiders center pop-up-menu hidden">
         <div class="close"><i class="fas fa-times"></i></div>
         <div class="content-wrapper">
             <div class="text-side">Index: 1</div>
@@ -76,18 +92,17 @@
             <div class="text-side">Purpose: RESET</div>
         </div>
     </span>
-    <span class="menu-bottom insiders">
+        <span class="menu-bottom insiders">
         <div class="bottom-wrapper">
-        <button class="elem2 button-download">Download&nbsp;<i class="fas fa-download"></i>
-        </button>
-            <button class="elem2 button-status">Status: Warning
-        </button>
+        <!--<button class="elem2 button-download">Download&nbsp;<i class="fas fa-download"></i>
+        </button> -->
+            <button class="elem2 button-status">Status: Warning</button>
         </div>
-        <!--    <div class="status-wrapper elem2">
-        <div id="status" class=" warning">Status: Warning</div>
-        <div class="arrow-right "></div>
-            </div>
-        </div> --->
+            <!--    <div class="status-wrapper elem2">
+            <div id="status" class=" warning">Status: Warning</div>
+            <div class="arrow-right "></div>
+                </div>
+            </div> --->
     </span>
-</div>
+    </div>
 {% endblock %}

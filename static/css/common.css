@@ -46,7 +46,10 @@ button {
     width: 40%;
     min-width: 100px;
     bottom: 0rem;
+    margin: auto;
 }
+
+button:focus {outline:0;}
 
 .drop-down-select select {
     display: none; /*hide original SELECT element: */
@@ -61,7 +64,7 @@ button {
     position: absolute;
     content: "";
     top: 1em;
-    right: 0.7em;
+    right: 0.3em;
     width: 0;
     height: 0;
     border: 0.4em solid transparent;

@@ -1,5 +1,5 @@
 import time
-import datetime
+from datetime import datetime
 
 
 class Time:
@@ -10,4 +10,5 @@ class Time:
 
     @staticmethod
     def get_curr_time():
-        return datetime.datetime.now().time()
+        curr_time = datetime.now().time()
+        return curr_time

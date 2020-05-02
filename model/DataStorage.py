@@ -1,8 +1,9 @@
 from model.Data import Data
 from model.MemErrorStorage import MemErrorStorage
+from model.Time import Time
 
 
-class DataStorage():
+class DataStorage:
 
     def __init__(self):
         self.prev_data = None
@@ -20,6 +21,9 @@ class DataStorage():
             if self.curr_data.msg_code == 'ECC_CHECKED'
             clears self.curr_data
         """
+        curr_time = Time.get_curr_time()
+        self.curr_data.time = curr_time
+
         data_type = self.curr_data.msg_code
         if not data_type == 'HEARTBEAT':
             self.data_arr.append(self.curr_data)

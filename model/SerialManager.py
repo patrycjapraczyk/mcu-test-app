@@ -4,6 +4,7 @@ from queue import Queue
 from model.GlobalConstants import GlobalConstants
 from model.DataPacketFactory import DataPacketFactory
 from model.ComErrorStorage import ComErrorStorage
+from model.ComError import ComError
 from model.Observer.Observer import Observer
 from model.Observer.Subject import Subject
 from model.Time import Time
@@ -14,6 +15,9 @@ class SerialManager(Observer):
     BYTESIZE = 8
     NANOSECONDS_PER_SECOND = 1000000000
     BAUDRATES = [115200, 57600, 19200, 9600]
+    HEARTBEAT_PERIODS_ALL =  [100, 250, 500, 1000]
+    HEARTBEAT_PERIODS_MEDIUM = [250, 500, 1000]
+    HEARTBEAT_PERIODS_UPPER = [500, 1000]
 
     def __init__(self, com_error_storage: ComErrorStorage):
         self.com_error_storage = com_error_storage
@@ -23,10 +27,19 @@ class SerialManager(Observer):
         self.last_heartbeat_sent = None
         self.last_sent_time = 0
         self.cur_baudrate = 0
-        self.heartbeat_period = 1
+
+        self.heartbeat_period = 1000
+        self.heartbeat_id = 0
+        self.heartbeat_period_rates = self.HEARTBEAT_PERIODS_ALL
+
         self.update_heartbeat_timeout()
         self.lock = threading.Lock()
         self.heartbeat_received = False
+        self.curr_heartbeat_period_id = 2
+
+        self.cur_ecc_period_id = 1000
+
+        self.serial_port = None
 
     def update(self, subject: Subject) -> None:
         heartbeat_received = subject.heartbeat_received
@@ -87,7 +100,7 @@ class SerialManager(Observer):
             self.cur_baudrate = baudrate
             self.serial_port = serial.Serial(port, baudrate,
                                                  self.BYTESIZE, serial.PARITY_NONE, serial.STOPBITS_ONE)
-
+            self.adjust_curr_heartbeat_rate()
 
     def read_data(self):
         """
@@ -95,13 +108,14 @@ class SerialManager(Observer):
         and adds them to te thread-safe queue for data analysis
         """
         data = ''
-        while (True):
-            self.lock.acquire()
+        while True:
+            #self.lock.acquire()
             if not self.serial_port: continue
             new_data = self.serial_port.read()
-            self.lock.release()
-            if (new_data):
+            #self.lock.release()
+            if new_data:
                 data += new_data.hex()
+                print('data  LOLS ' + data)
                 # add the incoming data str to the queue
                 if len(data) >= GlobalConstants.MAX_PACKET_LEN:
                     self.read_data_queue.put(data)
@@ -126,7 +140,8 @@ class SerialManager(Observer):
         time.sleep(self.heartbeat_period)
         while True:
             if not self.heartbeat_received:
-                self.com_error_storage.add_error('NO RESPONSE', 0)
+                err = ComError('NO RESPONSE', '')
+                self.com_error_storage.add_error(err, 0)
             else:
                 self.heartbeat_received = False
                 self.heartbeat_id += 1
@@ -135,19 +150,50 @@ class SerialManager(Observer):
             time.sleep(self.heartbeat_period)
 
     def send_heartbeat_data(self):
-        self.lock.acquire()
+        #self.lock.acquire()
         #TODO limit the number of data packets that can be sent at one go
         while not self.send_data_queue.empty():
             data = self.send_data_queue.get()
             self.send_data_packet(data)
 
-        heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT', params={'heartbeat_id': self.heartbeat_id});
+        heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT', self.sent_counter,
+                                                        params={'heartbeat_id': self.heartbeat_id,
+                                                                'heartbeat_period': self.curr_heartbeat_period_id});
         self.last_heartbeat_sent = self.heartbeat_id
 
         self.send_data_packet(heartbeat_packet)
-        self.lock.release()
+        #self.lock.release()
 
     def send_data_packet(self, data):
         self.serial_port.write(data)
         self.last_sent_time = Time.get_curr_time_ns()
         self.sent_counter += 1
+
+    def adjust_curr_heartbeat_rate(self):
+        if self.cur_baudrate == 9600:
+            self.heartbeat_period_rates = self.HEARTBEAT_PERIODS_UPPER
+        elif self.cur_baudrate == 19200:
+            self.heartbeat_period_rates = self.HEARTBEAT_PERIODS_MEDIUM
+
+    def set_heartbeat_period(self, heartbeat_period):
+        if heartbeat_period in GlobalConstants.HEARTBEAT_PERIODS.values():
+            self.heartbeat_period = heartbeat_period
+            return True
+        return False
+
+    def set_ecc_period(self, ecc_period):
+        if ecc_period in GlobalConstants.ECC_CHECK_PERIODS.keys():
+            ecc_period_id = GlobalConstants.ECC_CHECK_PERIODS[ecc_period]
+            if ecc_period_id and ecc_period_id != self.cur_ecc_period_id:
+                self.send_ecc_period_change(ecc_period_id)
+                return True
+        return False
+
+    def send_ecc_period_change(self, period_id):
+        ecc_period_change_packet = DataPacketFactory.get_packet('ECC_PERIOD_CHANGE', self.sent_counter,
+                                     params={'period_id': period_id})
+        self.add_data_to_send_queue(ecc_period_change_packet)
+
+
+
+

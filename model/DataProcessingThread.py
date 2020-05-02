@@ -15,11 +15,11 @@ from model.Observer.Subject import Subject
 
 
 class DataProcessingThread(Thread, Subject):
-    def __init__(self, queue: Queue, com_error_storage: ComErrorStorage):
+    def __init__(self, queue: Queue, com_error_storage: ComErrorStorage, data_storage: DataStorage):
         Thread.__init__(self)
         self._stopped = False
         self.q = queue
-        self.data_storage = DataStorage()
+        self.data_storage = data_storage
         self.com_error_storage = com_error_storage
         self.curr_data_str = ""
         self.last_heartbeat = None
@@ -97,6 +97,7 @@ class DataProcessingThread(Thread, Subject):
                                     end_code_index: end_code_index + GlobalConstants.START_END_CODE_LENGTH]
 
             if expected_end_code == GlobalConstants.END_CODE:
+                # perform data analysis functions and save data
                 self.add_data_payload(end_code_index)
                 self.analyse_data_payload(curr_data_item)
                 self.check_data_index()

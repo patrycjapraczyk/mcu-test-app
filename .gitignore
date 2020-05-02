@@ -6,3 +6,5 @@ venv/pyvenv.cfg
 venv/Scripts/__pycache__/
 venv/
 __pycache__/
+mem_errors.txt
+com_errors.txt

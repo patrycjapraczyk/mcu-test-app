@@ -22,17 +22,18 @@ class Calculator:
         return hex_num
 
     @staticmethod
-    def get_bytearray(decnum: int) -> bytearray:
+    def get_bytearray(decnum: int, bytelen=0) -> bytearray:
         """
         :param decnum: (int) a decimal number,
         :return: a bytearray representation od decnum (int)
         """
         bitlen = decnum.bit_length()
-        bytelen = int(bitlen / 8)
-        if bitlen % 8 != 0:
-            bytelen += 1
-        if decnum == 0:
-           bytelen = 1
+        if bytelen == 0:
+            bytelen = int(bitlen / 8)
+            if bitlen % 8 != 0:
+                bytelen += 1
+            if decnum == 0:
+               bytelen = 1
         bytes = decnum.to_bytes(bytelen, byteorder='big')
         byte_array = bytearray(bytes)
         return byte_array
