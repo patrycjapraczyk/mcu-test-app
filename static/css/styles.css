@@ -3,10 +3,11 @@
 .main {
     width: 70%;
     height: 74%;
+    min-height: 600px;
+    min-width: 700px;
     background-color: #1F2123;
     font-color: white;
     border-radius: 1em;
-    draggable: true;
     box-sizing: border-box;
     position: relative;
 }
@@ -27,7 +28,7 @@
 .menu-top {
     border-top-left-radius: 1em;
     background-color: rgba(56, 60, 64, 0.7);
-    height: 16%;
+    height: 13%;
     width: 70%;
     position:absolute;
 }
@@ -78,7 +79,7 @@
 }
 
 .left-menu {
-    top: 16%;
+    top: 13%;
     height: 72%;
     width: 70%;
     position: absolute;
@@ -100,9 +101,9 @@
 
 table {
     margin-top: 1em;
+    table-layout: fixed;
     height: 90%;
-    width: 70%;
-    position: absolute;
+    width: 100%;
 }
 
 thead > tr {
@@ -123,6 +124,14 @@ tbody {
 td, th {
     text-align: left;
     padding: 0.3em 2em;
+}
+
+th.small, td.small {
+    width: 15%;
+}
+
+th.big, td.big {
+    width: 70%;
 }
 
 tr:not(.table-head){
@@ -155,9 +164,8 @@ tr:nth-child(odd):not(.table-head):hover {
 }
 
 .button-red {
-  background-color: rgba(225, 66, 35, 0.8);
-    margin-top: 7em;
-    margin-left:3rem;
+    background-color: rgba(225, 66, 35, 0.8);
+    margin: 7em auto auto auto;
 }
 
 .button-red:hover {
@@ -174,36 +182,53 @@ tr:nth-child(odd):not(.table-head):hover {
     padding: 0.8em;
 }
 
-.button-status{
-    background-color: rgba(245, 229, 27, 0.8);
-    color: black;
-    margin-left: 2rem;
-    padding: 0.8em;
-}
-
 .button-download:hover{
     background-color: rgba(35, 67, 217, 1);
 }
 
-#status{
-    height: 25px;
-    padding: 5px 0px 5px 10px;
-    display: inline-block;
-    margin-left: 1rem;
-    margin-right:0;
-    border-right: 0;
-}
-.arrow-right {
-  width: 0;
-  height: 0;
-  border-top: 35px solid transparent;
-  border-bottom: 35px solid transparent;
-  border-left: 35px solid yellow;
+#pointer {
+    width: 30%;
+    min-width: 2em;
+    height: 2em;
+    line-height: 2em;
+    position: relative;
+    background: yellow;
+    font-weight: bold;
+    text-align: center;
+    margin: auto auto auto 3em;
+    color: #1F2123;
 }
 
-.warning{
-    color: black;
-    background-color: yellow;
+#pointer:after {
+    content: "";
+    position: absolute;
+    left: -1em;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-right: 1em solid yellow;
+    border-top: 1em solid transparent;
+    border-bottom: 1em solid transparent;
+}
+
+#pointer:before {
+    content: "";
+    position: absolute;
+    left: -1em;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-right: 1em solid yellow;
+    border-top: 1em solid transparent;
+    border-bottom: 1em solid transparent;
+}
+
+.text-centered {
+    position: relative;
+    margin: auto;
+    color: #1F2123;
+    width: 100%;
+    hight: 100%;
 }
 
 #wrong-data {
@@ -217,8 +242,6 @@ background-color:
 }
 
 scroll-tbody-y { height:80px; overflow:auto;}
-
-scroll-tbody-x { width: 60px; overflow: auto;}
 
 .fa-stop {
     color: rgba(225, 66, 35, 1);

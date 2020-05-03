@@ -9,9 +9,9 @@
 {% block body %}
     <div draggable="true" class="main center">
     <span class="menu-top insiders">
-        <button class="button-icon"><i class="fas fa-stop"></i></button>
+        <!--<button class="button-icon"><i class="fas fa-stop"></i></button>-->
         <button id="settings-button" class="button-icon"><i class="fas fa-cog"></i></button>
-        <button class="button-icon">reset&nbsp;<i class="fas fa-info-circle"></i></button>
+        <!--<button class="button-icon">reset&nbsp;<i class="fas fa-info-circle"></i></button>-->
         <button class="button-icon">mem-error&nbsp;<i class="fas fa-info-circle"></i></button>
         <button class="button-icon">com-error&nbsp;<i class="fas fa-info-circle"></i></button>
     </span>
@@ -19,13 +19,13 @@
         <table CELLSPACING=0 class="insiders">
             <thead>
             <tr class="table-head">
-                <th>
+                <th class="small">
                     <div>Counter</div>
                 </th>
-                <th>
+                <th class="small">
                     <div>Time</div>
                 </th>
-                <th>
+                <th class="big">
                     <div>Data received</div>
                 </th>
             </tr>
@@ -33,9 +33,9 @@
             <tbody class="scroll-tbody-y">
             {% for data in data_packets %}
                 <tr>
-                    <td>{{ loop.index }}.</td>
-                    <td>{{ data.time }}</td>
-                    <td>{{ '0x' + data.complete_data }}</td>
+                    <td class="small">{{ loop.index }}.</td>
+                    <td class="small">{{ data.time }}</td>
+                    <td class="big">{{ '0x' + data.complete_data }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -96,7 +96,8 @@
         <div class="bottom-wrapper">
         <!--<button class="elem2 button-download">Download&nbsp;<i class="fas fa-download"></i>
         </button> -->
-            <button class="elem2 button-status">Status: Warning</button>
+            <!--<button class="elem2 button-status">Status: Warning</button>-->
+            <div class="elem2 warning" id="pointer">Status: warning</div>
         </div>
             <!--    <div class="status-wrapper elem2">
             <div id="status" class=" warning">Status: Warning</div>
