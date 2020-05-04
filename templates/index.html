@@ -8,15 +8,15 @@
 {% endblock %}
 {% block body %}
     <div draggable="true" class="main center">
-    <span class="menu-top insiders">
+    <span class="menu-top">
         <!--<button class="button-icon"><i class="fas fa-stop"></i></button>-->
         <button id="settings-button" class="button-icon"><i class="fas fa-cog"></i></button>
         <!--<button class="button-icon">reset&nbsp;<i class="fas fa-info-circle"></i></button>-->
         <button class="button-icon">mem-error&nbsp;<i class="fas fa-info-circle"></i></button>
         <button class="button-icon">com-error&nbsp;<i class="fas fa-info-circle"></i></button>
     </span>
-        <span class="left-menu insiders">
-        <table CELLSPACING=0 class="insiders">
+        <span class="left-menu">
+        <table CELLSPACING=0>
             <thead>
             <tr class="table-head">
                 <th class="small">
@@ -41,10 +41,10 @@
             </tbody>
         </table>
     </span>
-        <span id="control-panel" class="side-menu insiders center">
+        <span id="control-panel" class="side-menu center">
         <button id="reset" class="button-red">Reset request</button>
     </span>
-    <span id="settings" class="side-menu pop-up-menu insiders center hidden">
+    <span id="settings" class="side-menu pop-up-menu center hidden">
         <div id="close-settings" class="close"><i class="fas fa-times"></i></div>
         <form class="content-wrapper" method="POST" action="{{ url_for('settings') }}">
             <div class="elem1">
@@ -83,7 +83,7 @@
             </div>
         </form>
     </span>
-        <span id="info" class="side-menu insiders center pop-up-menu hidden">
+        <span id="info" class="side-menu center pop-up-menu hidden">
         <div class="close"><i class="fas fa-times"></i></div>
         <div class="content-wrapper">
             <div class="text-side">Index: 1</div>
@@ -92,18 +92,10 @@
             <div class="text-side">Purpose: RESET</div>
         </div>
     </span>
-        <span class="menu-bottom insiders">
-        <div class="bottom-wrapper">
-        <!--<button class="elem2 button-download">Download&nbsp;<i class="fas fa-download"></i>
-        </button> -->
-            <!--<button class="elem2 button-status">Status: Warning</button>-->
+        <span class="menu-bottom">
+
+        <!--<button class="elem2 button-download">Download&nbsp;<i class="fas fa-download"></i></button> -->
             <div class="elem2 warning" id="pointer">Status: warning</div>
-        </div>
-            <!--    <div class="status-wrapper elem2">
-            <div id="status" class=" warning">Status: Warning</div>
-            <div class="arrow-right "></div>
-                </div>
-            </div> --->
-    </span>
+        </span>
     </div>
 {% endblock %}

@@ -26,6 +26,7 @@ $(document).ready( function() {
 
     $('.select-items').children('div').on("click", function (e) {
         $(this).closest('.drop-down-select').find('.select-selected').text(this.innerHTML);
+        $(this).closest('.drop-down-select').find('select').find("option[value='"+this.innerHTML+"']").attr('selected', 'selected')
         closeAllSelect();
     });
 
