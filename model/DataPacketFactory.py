@@ -30,11 +30,11 @@ class DataPacketFactory:
 
     @staticmethod
     def append_checksum(data: bytearray):
-        checksum = Checksum.crc32(data)
+        checksum = Checksum.crc32(data[GlobalConstants.MSG_CODE_BYTE: len(data) - 1])
         data[GlobalConstants.CHECKSUM_START_BYTE] = checksum >> 24 & 0xff
-        data[GlobalConstants.CHECKSUM_START_BYTE] = checksum >> 16 & 0xff
-        data[GlobalConstants.CHECKSUM_START_BYTE] = checksum >> 8 & 0xff
-        data[GlobalConstants.CHECKSUM_START_BYTE] = checksum & 0xff
+        data[GlobalConstants.CHECKSUM_START_BYTE + 1] = checksum >> 16 & 0xff
+        data[GlobalConstants.CHECKSUM_START_BYTE + 2] = checksum >> 8 & 0xff
+        data[GlobalConstants.CHECKSUM_START_BYTE + 3] = checksum & 0xff
 
     @staticmethod
     def get_heartbeat_request(data_cnt, params):
@@ -64,10 +64,7 @@ class DataPacketFactory:
 
     @staticmethod
     def get_heartbeat_response(data_cnt, params):
-        heartbeat_id = params.heartbeat_id
-        if not heartbeat_id:
-            return None
-
+        heartbeat_id = params['heartbeat_id']
         data = bytearray(b'')
         data.append(0xaa)  # start code
         data.append(0)  # packet len[0]

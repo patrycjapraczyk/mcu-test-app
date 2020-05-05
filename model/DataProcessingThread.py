@@ -44,8 +44,8 @@ class DataProcessingThread(Thread, Subject):
         start_index = self.get_start_index(self.curr_data_str)
         # take another data packet off the queue if it was not found
         # and continue the search for the start code
-        while start_index < 0:
-            self.curr_data_str = curr_data = self.q.get()
+        if start_index < 0:
+            self.curr_data_str = self.q.get()
             start_index = self.get_start_index(self.curr_data_str)
 
         self.curr_data_str = self.curr_data_str[start_index:]
@@ -54,7 +54,7 @@ class DataProcessingThread(Thread, Subject):
             # If there is data to be analysed from the previous data str,
             # do not take the new data off the queue
             curr_data_item = self.data_storage.curr_data
-            if len(self.curr_data_str) < GlobalConstants.HEADER_LEN:
+            while len(self.curr_data_str) < GlobalConstants.HEADER_LEN:
                 self.curr_data_str += self.q.get()
 
             # try to find end code if data analysis of current data has not been finished
@@ -73,7 +73,7 @@ class DataProcessingThread(Thread, Subject):
             if len(self.curr_data_str) < GlobalConstants.DATA_PAYLOAD_START_INDEX: continue
 
             header_str = self.curr_data_str[:GlobalConstants.DATA_PAYLOAD_START_INDEX]
-            self.curr_data_item.add_header_info(header_str)
+            self.data_storage.curr_data.add_header_info(header_str)
 
             # remove all all data that has been analysed and saved already
             self.curr_data_str = self.curr_data_str[GlobalConstants.DATA_PAYLOAD_START_INDEX:]
@@ -99,9 +99,13 @@ class DataProcessingThread(Thread, Subject):
             if expected_end_code == GlobalConstants.END_CODE:
                 # perform data analysis functions and save data
                 self.add_data_payload(end_code_index)
-                self.analyse_data_payload(curr_data_item)
-                self.check_data_index()
-                self.verify_checksum()
+                if not self.analyse_data_payload(curr_data_item):
+                    return False
+                if not self.check_data_index():
+                    return False
+                if not self.verify_checksum(curr_data_item):
+                    return False
+                print('check heartbeat')
                 self.check_heartbeat(curr_data_item)
                 self.data_storage.save_curr_data()
             # if can't find the end code within data
@@ -113,13 +117,16 @@ class DataProcessingThread(Thread, Subject):
 
     def check_heartbeat(self, curr_data_item: Data):
         if curr_data_item.msg_code == 'HEARTBEAT':
+            print('heartbeat received')
             self.heartbeat_received_id = curr_data_item.data_payload
             self.notify()
 
     def add_data_payload(self, end_index):
         curr_data_item = self.data_storage.curr_data
 
-        curr_data_item.data_payload += self.curr_data_str[:end_index]
+        payload = self.curr_data_str[:end_index]
+        curr_data_item.data_payload += payload
+        curr_data_item.complete_data += payload + '81'
 
         # remove the analysed data from curr_data_str
         self.curr_data_str = self.curr_data_str[end_index + GlobalConstants.START_END_CODE_LENGTH:]
@@ -167,18 +174,22 @@ class DataProcessingThread(Thread, Subject):
 
         if prev_index != GlobalConstants.MAX_DATA_INDEX:
             if curr_index != prev_index + 1:
-                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data)
+                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data.complete_data)
                 self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
                 return False
         else:
             if curr_index != 0:
-                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data)
+                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data.complete_data)
                 self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
                 return False
         return True
 
     def verify_checksum(self, data: Data):
-        data_int = Calculator.get_int(data.complete_data)
+        data_type = '0' + str(data.msg_code)
+        data_for_checksum = data_type + data.data_payload
+        byte_len = int(len(data_for_checksum) / GlobalConstants.HEX_DIGITS_PER_BYTE)
+        dec_num = Calculator.get_int(data_for_checksum)
+        data_int = Calculator.get_bytearray(dec_num, byte_len)
         expected_checksum = Checksum.crc32(data_int)
         return data.checksum == expected_checksum
 

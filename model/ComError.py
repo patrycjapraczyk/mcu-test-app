@@ -3,7 +3,7 @@ from model.Time import Time
 
 
 class ComError:
-    def __init__(self, type, packet):
+    def __init__(self, type, packet: str):
         if type in GlobalConstants.COM_ERROR_TYPES:
             self.type = type
 
