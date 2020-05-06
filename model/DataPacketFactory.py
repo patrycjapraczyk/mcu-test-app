@@ -78,7 +78,8 @@ class DataPacketFactory:
         data.append(0)  # checksum[2]
         data.append(0)  # checksum[3]
         data.append(GlobalConstants.MESSAGE_CODE_DICT['HEARTBEAT_RESPONSE'])  # msg_code
-        DataPacketFactory.append_data(data, Calculator.get_bytearray(heartbeat_id))
+        DataPacketFactory.append_data(data, Calculator.get_bytearray(heartbeat_id, 4
+                                                                     ))
         data.append(0x81)  # end_code
 
         DataPacketFactory.append_len(data)

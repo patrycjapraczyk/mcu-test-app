@@ -117,7 +117,8 @@ class DataProcessingThread(Thread, Subject):
     def check_heartbeat(self, curr_data_item: Data):
         HEARTBEAT_RESPONSE_CODE = 0x01
         if curr_data_item.msg_code == HEARTBEAT_RESPONSE_CODE:
-            self.heartbeat_received_id = curr_data_item.data_payload
+            heartbeat = Calculator.get_int(curr_data_item.data_payload)
+            self.heartbeat_received_id = heartbeat
             self.notify()
 
     def add_data_payload(self, end_index):

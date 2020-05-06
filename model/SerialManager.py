@@ -98,7 +98,7 @@ class SerialManager(Observer):
         if baudrate in self.BAUDRATES and port in self.serial_ports():
             self.cur_baudrate = baudrate
             self.serial_port = serial.Serial(port, baudrate,
-                                                 self.BYTESIZE, serial.PARITY_NONE, serial.STOPBITS_ONE)
+                                                 self.BYTESIZE, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0)
             self.adjust_curr_heartbeat_rate()
 
     def read_data(self):
@@ -109,7 +109,7 @@ class SerialManager(Observer):
         data = ''
         while not self.has_timeout_passed():
             if not self.serial_port: continue
-            new_data = self.serial_port.read(0)
+            new_data = self.serial_port.read()
             if new_data:
                 data += new_data.hex()
                 # add the incoming data str to the queue
@@ -161,7 +161,6 @@ class SerialManager(Observer):
         heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT', self.sent_counter,
                                                         params={'heartbeat_id': self.heartbeat_id,
                                                                 'heartbeat_period': self.curr_heartbeat_period_id})
-
 
         self.last_heartbeat_sent_id = self.heartbeat_id
         self.send_data_packet(heartbeat_packet)
