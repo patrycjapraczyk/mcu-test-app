@@ -163,7 +163,7 @@ class SerialManager(Observer):
         self.last_heartbeat_sent_id = self.heartbeat_id
 
         self.send_data_packet(heartbeat_packet)
-        print('sent heartbeat id: ' + self.heartbeat_id)
+        print('sent heartbeat id: ' + str(self.heartbeat_id))
 
     def send_data_packet(self, data):
         self.serial_port.write(data)
