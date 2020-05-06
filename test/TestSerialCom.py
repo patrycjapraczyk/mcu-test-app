@@ -43,15 +43,21 @@ class TestSerialCom:
         while True:
             if not self.serial_port: continue
             new_data = self.serial_port.read()
+            print(new_data)
             if new_data:
                 data += new_data.hex()
                 # add the incoming data str to the queue
-                if len(data) >= GlobalConstants.HEARTBEAT_LEN:
-                    heartbeat_id = StrManipulator.substring(data, GlobalConstants.HEARTBEAT_ID_START, GlobalConstants.HEARTBEAT_ID_END)
+                if len(data) >= GlobalConstants.HEARTBEAT_LEN * GlobalConstants.HEX_DIGITS_PER_BYTE + 2:
+                    new_data = data[GlobalConstants.DATA_PAYLOAD_START_INDEX:]
+                    index_list = StrManipulator.split_string(new_data, GlobalConstants.PAYLOAD_INDICES_LEN)
+                    index_list = StrManipulator.remove_every_other(index_list, True)
+                    new_data = StrManipulator.list_into_str(index_list)
+                    heartbeat_id = StrManipulator.substring(new_data, GlobalConstants.HEARTBEAT_ID_START, GlobalConstants.HEARTBEAT_ID_END)
                     heartbeat_id = Calculator.get_int(heartbeat_id)
                     params = {'heartbeat_id': heartbeat_id}
-                    heartbeat_response = DataPacketFactory.get_packet('HEARTBEAT', 0, params)
+                    heartbeat_response = DataPacketFactory.get_packet('HEARTBEAT_RESPONSE', 0, params)
                     self.send_data_packet(heartbeat_response)
+                    print('SENT VALS')
 
 
 test = TestSerialCom()

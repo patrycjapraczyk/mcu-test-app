@@ -13,9 +13,9 @@ from model.Time import Time
 class SerialManager(Observer):
     #alter these parameters for your own usecase
     BYTESIZE = 8
-    NANOSECONDS_PER_SECOND = 1000000000
+    NANOSECONDS_PER_MILI_SECOND = 1000000
     BAUDRATES = [115200, 57600, 19200, 9600]
-    HEARTBEAT_PERIODS_ALL =  [100, 250, 500, 1000]
+    HEARTBEAT_PERIODS_ALL = [100, 250, 500, 1000]
     HEARTBEAT_PERIODS_MEDIUM = [250, 500, 1000]
     HEARTBEAT_PERIODS_UPPER = [500, 1000]
 
@@ -24,7 +24,7 @@ class SerialManager(Observer):
         self.read_data_queue = Queue()
         self.send_data_queue = Queue()
         self.sent_counter = 0
-        self.last_heartbeat_sent = None
+        self.last_heartbeat_sent_id = ''
         self.last_sent_time = 0
         self.cur_baudrate = 0
 
@@ -33,21 +33,19 @@ class SerialManager(Observer):
         self.heartbeat_period_rates = self.HEARTBEAT_PERIODS_ALL
 
         self.update_heartbeat_timeout()
-        self.lock = threading.Lock()
-        self.heartbeat_received = False
-        self.curr_heartbeat_period_id = 2
 
+        self.curr_heartbeat_period_id = 2
         self.cur_ecc_period_id = 1000
 
         self.serial_port = None
+        self.heartbeat_received = False
 
     def update(self, subject: Subject) -> None:
-        heartbeat_received = subject.heartbeat_received
-        if heartbeat_received == self.last_heartbeat:
-            cur_time = Time.get_curr_time_ns()
-            time_to_period_passed = cur_time - self.last_sent_time
-            if time_to_period_passed <= (self.timeout * self.NANOSECONDS_PER_SECOND):
-                self.heartbeat_received = True
+        heartbeat_received = subject.heartbeat_received_id
+        print('heartbeat received: ' + heartbeat_received)
+        if heartbeat_received != '' and heartbeat_received == self.last_heartbeat_sent_id:
+            self.heartbeat_received = True
+            print('heartbeats matching')
 
     def update_heartbeat_timeout(self):
         timeout = self.heartbeat_period * 0.8
@@ -108,18 +106,19 @@ class SerialManager(Observer):
         and adds them to te thread-safe queue for data analysis
         """
         data = ''
-        while True:
-            #self.lock.acquire()
+        while not self.has_timeout_passed():
             if not self.serial_port: continue
-            new_data = self.serial_port.read()
-            #self.lock.release()
+            new_data = self.serial_port.read(0)
             if new_data:
                 data += new_data.hex()
-                print('data  LOLS ' + data)
                 # add the incoming data str to the queue
-                if len(data) >= GlobalConstants.MAX_PACKET_LEN:
+                if len(data) >= GlobalConstants.HEARTBEAT_RESPONSE_LEN:
                     self.read_data_queue.put(data)
+                    print('read data: ' + data)
                     data = ''
+
+        if data != '':
+            self.read_data_queue.put(data)
 
     def add_data_to_send_queue(self, data: bytearray):
         """
@@ -131,26 +130,28 @@ class SerialManager(Observer):
         """
         self.send_data_queue.put(data)
 
-    def send_data(self):
-        """
-        send a data packet to the open
-        serial communication port
-        """
-        self.send_heartbeat_data()
-        time.sleep(self.heartbeat_period)
-        while True:
-            if not self.heartbeat_received:
-                err = ComError('NO RESPONSE', '')
-                self.com_error_storage.add_error(err, 0)
-            else:
-                self.heartbeat_received = False
-                self.heartbeat_id += 1
+    def check_heartbeat_received(self):
+        if not self.heartbeat_received:
+            err = ComError('NO RESPONSE', '')
+            self.com_error_storage.add_error(err, 0)
+        else:
+            self.heartbeat_received = False
+            self.heartbeat_id += 1
 
+    def heartbeat_loop(self):
+        while True:
             self.send_heartbeat_data()
-            time.sleep(self.heartbeat_period)
+            self.read_data()
+            self.check_heartbeat_received()
+
+    def has_timeout_passed(self):
+        cur_time = Time.get_curr_time_ns()
+        time_passed = cur_time - self.last_sent_time
+        if time_passed < (self.timeout * self.NANOSECONDS_PER_MILI_SECOND):
+            return False
+        return True
 
     def send_heartbeat_data(self):
-        #self.lock.acquire()
         #TODO limit the number of data packets that can be sent at one go
         while not self.send_data_queue.empty():
             data = self.send_data_queue.get()
@@ -159,10 +160,10 @@ class SerialManager(Observer):
         heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT', self.sent_counter,
                                                         params={'heartbeat_id': self.heartbeat_id,
                                                                 'heartbeat_period': self.curr_heartbeat_period_id});
-        self.last_heartbeat_sent = self.heartbeat_id
+        self.last_heartbeat_sent_id = self.heartbeat_id
 
         self.send_data_packet(heartbeat_packet)
-        #self.lock.release()
+        print('sent heartbeat id: ' + self.heartbeat_id)
 
     def send_data_packet(self, data):
         self.serial_port.write(data)

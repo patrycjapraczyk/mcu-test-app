@@ -22,10 +22,10 @@ class DataProcessingThread(Thread, Subject):
         self.data_storage = data_storage
         self.com_error_storage = com_error_storage
         self.curr_data_str = ""
-        self.last_heartbeat = None
+        self.heartbeat_received_id = ''
 
     def notify(self) -> None:
-        self.observer.update(self)
+        self._observer.update(self)
 
     def detach(self) -> None:
         self._observer = None
@@ -105,7 +105,6 @@ class DataProcessingThread(Thread, Subject):
                     return False
                 if not self.verify_checksum(curr_data_item):
                     return False
-                print('check heartbeat')
                 self.check_heartbeat(curr_data_item)
                 self.data_storage.save_curr_data()
             # if can't find the end code within data
@@ -116,8 +115,8 @@ class DataProcessingThread(Thread, Subject):
             return True
 
     def check_heartbeat(self, curr_data_item: Data):
-        if curr_data_item.msg_code == 'HEARTBEAT':
-            print('heartbeat received')
+        HEARTBEAT_RESPONSE_CODE = 0x01
+        if curr_data_item.msg_code == HEARTBEAT_RESPONSE_CODE:
             self.heartbeat_received_id = curr_data_item.data_payload
             self.notify()
 

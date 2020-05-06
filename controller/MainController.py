@@ -4,9 +4,7 @@ from model.DataProcessingThread import DataProcessingThread
 from model.ComErrorStorage import ComErrorStorage
 from model.DataStorage import DataStorage
 from model.GlobalConstants import GlobalConstants
-from model.Data import Data
 from threading import Thread
-import time
 
 
 class MainController:
@@ -23,16 +21,13 @@ class MainController:
 
     def start_test(self, serial_port, baudrate):
         self.com_interface.init_connection(serial_port, int(baudrate))
-        read_thread = Thread(target=self.com_interface.read_data)
-        write_thread = Thread(target=self.com_interface.send_data)
+        heartbeat_thread = Thread(target=self.com_interface.heartbeat_loop)
         # pass the data to the thread via the queue
         analysis_thread = DataProcessingThread(self.com_interface.read_data_queue, self.com_error_storage, self.data_storage)
         analysis_thread.attach(self.com_interface)
 
-        time.sleep(2)
         analysis_thread.start()
-        read_thread.start()
-        write_thread.start()
+        heartbeat_thread.start()
 
     def get_all_data(self):
         return self.data_storage.data_arr
