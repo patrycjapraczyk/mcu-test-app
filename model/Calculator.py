@@ -1,3 +1,5 @@
+import binascii
+
 class Calculator:
     @staticmethod
     def get_int(hexnum: str) -> int:
@@ -37,3 +39,12 @@ class Calculator:
         bytes = decnum.to_bytes(bytelen, byteorder='big')
         byte_array = bytearray(bytes)
         return byte_array
+
+    @staticmethod
+    def get_hex_str(arr: bytearray) -> str:
+        """
+            prints into the console in hexadecimal format
+        :param arr: bytearray
+        """
+        hex_representation = binascii.hexlify(arr)
+        return str(hex_representation)

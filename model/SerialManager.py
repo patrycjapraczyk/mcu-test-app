@@ -8,6 +8,7 @@ from model.ComError import ComError
 from model.Observer.Observer import Observer
 from model.Observer.Subject import Subject
 from model.Time import Time
+from model.Calculator import Calculator
 
 
 class SerialManager(Observer):
@@ -159,13 +160,16 @@ class SerialManager(Observer):
 
         heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT', self.sent_counter,
                                                         params={'heartbeat_id': self.heartbeat_id,
-                                                                'heartbeat_period': self.curr_heartbeat_period_id});
-        self.last_heartbeat_sent_id = self.heartbeat_id
+                                                                'heartbeat_period': self.curr_heartbeat_period_id})
 
+
+        self.last_heartbeat_sent_id = self.heartbeat_id
         self.send_data_packet(heartbeat_packet)
         print('sent heartbeat id: ' + str(self.heartbeat_id))
 
-    def send_data_packet(self, data):
+    def send_data_packet(self, data: bytearray):
+        data_str = Calculator.get_hex_str(data)
+        print('sent data: ' + data_str)
         self.serial_port.write(data)
         self.last_sent_time = Time.get_curr_time_ns()
         self.sent_counter += 1
