@@ -42,10 +42,10 @@ class SerialManager(Observer):
 
     def update(self, subject: Subject) -> None:
         heartbeat_received = subject.heartbeat_received_id
-        print('heartbeat received: ' + str(heartbeat_received))
         if heartbeat_received != '' and heartbeat_received == self.last_heartbeat_sent_id:
             self.heartbeat_received = True
-            print('heartbeats matching')
+            curr_time = Time.get_curr_time()
+            print(str(curr_time) + ' heartbeats matching')
 
     def update_heartbeat_timeout(self):
         timeout = self.curr_heartbeat_period * 0.8
@@ -114,7 +114,8 @@ class SerialManager(Observer):
                 # add the incoming data str to the queue
                 if len(data) >= GlobalConstants.HEARTBEAT_RESPONSE_LEN:
                     self.read_data_queue.put(data)
-                    print('read data: ' + data)
+                    curr_time = Time.get_curr_time()
+                    print(str(curr_time) + ' read data: ' + data)
                     data = ''
 
         if data != '':
@@ -169,7 +170,8 @@ class SerialManager(Observer):
         if not self.serial_port:
             return False
         data_str = Calculator.get_hex_str(data)
-        print('sent data: ' + data_str)
+        curr_time = Time.get_curr_time()
+        print(str(curr_time) + ' sent data: ' + data_str)
         self.serial_port.write(data)
         self.last_sent_time = Time.get_curr_time_ns()
         self.sent_counter += 1
@@ -184,7 +186,6 @@ class SerialManager(Observer):
     def set_heartbeat_period(self, heartbeat_period):
         if heartbeat_period in GlobalConstants.HEARTBEAT_PERIODS.keys():
             self.curr_heartbeat_period = heartbeat_period
-            i = 0
             return True
         return False
 

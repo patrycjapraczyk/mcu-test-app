@@ -10,7 +10,7 @@ class ComErrorLogger:
         #self.start = self.get_curr_time()
         self.logger = Logger(self.FILE_NAME)
         self.start = Time.get_curr_time_ns()
-        self.logger.log('COMMUNICATION ERRORS:\n')
+        self.logger.log(' COMMUNICATION ERRORS:\n')
 
     def log_error(self, error: ComError, err_cnt, packets_received_num=1):
         err_percent = self.get_error_percentage(err_cnt, packets_received_num)

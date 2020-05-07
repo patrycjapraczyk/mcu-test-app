@@ -178,7 +178,6 @@ class DataProcessingThread(Thread, Subject):
         prev_index = prev_data_item.data_index
 
         max_index = GlobalConstants.MAX_DATA_INDEX
-        print('MAX INDEX: ' + str(max_index))
 
         if prev_index != GlobalConstants.MAX_DATA_INDEX:
             if curr_index != prev_index + 1:
