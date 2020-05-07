@@ -186,6 +186,7 @@ class SerialManager(Observer):
     def set_heartbeat_period(self, heartbeat_period):
         if heartbeat_period in GlobalConstants.HEARTBEAT_PERIODS.keys():
             self.curr_heartbeat_period = heartbeat_period
+            self.update_heartbeat_timeout()
             return True
         return False
 
