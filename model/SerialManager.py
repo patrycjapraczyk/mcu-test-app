@@ -138,7 +138,11 @@ class SerialManager(Observer):
             self.com_error_storage.add_error(err, 0)
         else:
             self.heartbeat_received = False
-            self.heartbeat_id += 1
+
+            if self.heartbeat_id >= GlobalConstants.HEARTBEAT_ID_MAX:
+                self.heartbeat_id = 0
+            else:
+                self.heartbeat_id += 1
 
     def heartbeat_loop(self):
         while True:
@@ -175,7 +179,11 @@ class SerialManager(Observer):
         print(str(curr_time) + ' sent data: ' + data_str)
         self.serial_port.write(data)
         self.last_sent_time = Time.get_curr_time_ns()
-        self.sent_counter += 1
+
+        if self.sent_counter >= GlobalConstants.DATA_INDEX_MAX:
+            self.sent_counter = 0
+        else:
+            self.sent_counter += 1
         return True
 
     def adjust_curr_heartbeat_rate(self):
