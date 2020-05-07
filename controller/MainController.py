@@ -4,6 +4,7 @@ from model.DataProcessingThread import DataProcessingThread
 from model.ComErrorStorage import ComErrorStorage
 from model.DataStorage import DataStorage
 from model.GlobalConstants import GlobalConstants
+from model.Data import Data
 from threading import Thread
 
 
@@ -14,10 +15,10 @@ class MainController:
         self.com_error_storage = ComErrorStorage()
         self.com_interface = ComInterfaceFactory.get_interface(self.INTERFACE_TYPE, self.com_error_storage)
         self.data_storage = DataStorage()
-        # data = Data()
-        # data.complete_data = 'aa001900000000000000000100006666000233330003333381'
-        # self.data_storage.curr_data = data
-        # self.data_storage.save_curr_data()
+        data = Data()
+        #data.complete_data = 'aa001900000000000000000100006666000233330003333381'
+        #self.data_storage.curr_data = data
+        #self.data_storage.save_curr_data()
 
     def start_test(self, serial_port, baudrate):
         self.com_interface.init_connection(serial_port, int(baudrate))

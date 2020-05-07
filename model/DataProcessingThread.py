@@ -117,7 +117,12 @@ class DataProcessingThread(Thread, Subject):
     def check_heartbeat(self, curr_data_item: Data):
         HEARTBEAT_RESPONSE_CODE = 0x01
         if curr_data_item.msg_code == HEARTBEAT_RESPONSE_CODE:
-            heartbeat = Calculator.get_int(curr_data_item.data_payload)
+            #TODO: move data extraction into a data packet
+            heartbeat = StrManipulator.split_string(curr_data_item.data_payload, GlobalConstants.PAYLOAD_INDICES_LEN)
+            heartbeat = StrManipulator.remove_every_other(heartbeat, True)
+            heartbeat = StrManipulator.list_into_str(heartbeat)
+            heartbeat = Calculator.get_int(heartbeat)
+            
             self.heartbeat_received_id = heartbeat
             self.notify()
 

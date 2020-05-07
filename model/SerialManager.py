@@ -43,7 +43,7 @@ class SerialManager(Observer):
 
     def update(self, subject: Subject) -> None:
         heartbeat_received = subject.heartbeat_received_id
-        print('heartbeat received: ' + heartbeat_received)
+        print('heartbeat received: ' + str(heartbeat_received))
         if heartbeat_received != '' and heartbeat_received == self.last_heartbeat_sent_id:
             self.heartbeat_received = True
             print('heartbeats matching')
@@ -164,14 +164,16 @@ class SerialManager(Observer):
 
         self.last_heartbeat_sent_id = self.heartbeat_id
         self.send_data_packet(heartbeat_packet)
-        print('sent heartbeat id: ' + str(self.heartbeat_id))
 
     def send_data_packet(self, data: bytearray):
+        if not self.serial_port:
+            return False
         data_str = Calculator.get_hex_str(data)
         print('sent data: ' + data_str)
         self.serial_port.write(data)
         self.last_sent_time = Time.get_curr_time_ns()
         self.sent_counter += 1
+        return True
 
     def adjust_curr_heartbeat_rate(self):
         if self.cur_baudrate == 9600:
