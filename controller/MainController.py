@@ -48,7 +48,7 @@ class MainController:
         return self.com_interface.set_heartbeat_period(heartbeat_period)
 
     def set_ecc_period(self, ecc_check_period):
-        return self.com_interface.send_ecc_period_change(ecc_check_period)
+        return self.com_interface.set_ecc_period(ecc_check_period)
 
 
 

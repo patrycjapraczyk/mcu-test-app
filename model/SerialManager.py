@@ -29,14 +29,13 @@ class SerialManager(Observer):
         self.last_sent_time = 0
         self.cur_baudrate = 0
 
-        self.heartbeat_period = 1000
         self.heartbeat_id = 0
         self.heartbeat_period_rates = self.HEARTBEAT_PERIODS_ALL
 
-        self.update_heartbeat_timeout()
+        self.curr_heartbeat_period = 1000
+        self.cur_ecc_period = 1000
 
-        self.curr_heartbeat_period_id = 2
-        self.cur_ecc_period_id = 1000
+        self.update_heartbeat_timeout()
 
         self.serial_port = None
         self.heartbeat_received = False
@@ -49,7 +48,7 @@ class SerialManager(Observer):
             print('heartbeats matching')
 
     def update_heartbeat_timeout(self):
-        timeout = self.heartbeat_period * 0.8
+        timeout = self.curr_heartbeat_period * 0.8
         if timeout <= 0.1:
             self.timeout = 0.1
         else:
@@ -158,9 +157,10 @@ class SerialManager(Observer):
             data = self.send_data_queue.get()
             self.send_data_packet(data)
 
+        curr_heartbeat_period_id = GlobalConstants.HEARTBEAT_PERIODS[self.curr_heartbeat_period]
         heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT', self.sent_counter,
                                                         params={'heartbeat_id': self.heartbeat_id,
-                                                                'heartbeat_period': self.curr_heartbeat_period_id})
+                                                                'heartbeat_period': curr_heartbeat_period_id})
 
         self.last_heartbeat_sent_id = self.heartbeat_id
         self.send_data_packet(heartbeat_packet)
@@ -182,15 +182,17 @@ class SerialManager(Observer):
             self.heartbeat_period_rates = self.HEARTBEAT_PERIODS_MEDIUM
 
     def set_heartbeat_period(self, heartbeat_period):
-        if heartbeat_period in GlobalConstants.HEARTBEAT_PERIODS.values():
-            self.heartbeat_period = heartbeat_period
+        if heartbeat_period in GlobalConstants.HEARTBEAT_PERIODS.keys():
+            self.curr_heartbeat_period = heartbeat_period
+            i = 0
             return True
         return False
 
     def set_ecc_period(self, ecc_period):
         if ecc_period in GlobalConstants.ECC_CHECK_PERIODS.keys():
             ecc_period_id = GlobalConstants.ECC_CHECK_PERIODS[ecc_period]
-            if ecc_period_id and ecc_period_id != self.cur_ecc_period_id:
+            if ecc_period != self.cur_ecc_period:
+                self.cur_ecc_period = ecc_period
                 self.send_ecc_period_change(ecc_period_id)
                 return True
         return False

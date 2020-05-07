@@ -76,10 +76,10 @@ class GlobalConstants:
     HEARTBEAT_LEN = 23
 
     HEARTBEAT_PERIODS = {
-        0: 100,
-        1: 250,
-        2: 500,
-        3: 1000
+        100: 0,
+        250: 1,
+        500: 2,
+        1000: 3
     }
 
     ECC_CHECK_PERIODS = {
