@@ -177,14 +177,19 @@ class DataProcessingThread(Thread, Subject):
         curr_index = curr_data_item.data_index
         prev_index = prev_data_item.data_index
 
+        max_index = GlobalConstants.MAX_DATA_INDEX
+        print('MAX INDEX: ' + str(max_index))
+
         if prev_index != GlobalConstants.MAX_DATA_INDEX:
             if curr_index != prev_index + 1:
-                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data.complete_data)
+                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data.complete_data, extra_data=' prev data_index: '+str(prev_index) +
+                                                                                                                 ', curr data index: ' + str(curr_index) + '\n')
                 self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
                 return False
         else:
             if curr_index != 0:
-                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data.complete_data)
+                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data.complete_data, extra_data=' prev data_index: '+str(prev_index) + ''
+                                                                                                                                                        ', curr data index: ' + str(curr_index) + '\n')
                 self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
                 return False
         return True

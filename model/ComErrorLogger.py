@@ -20,7 +20,9 @@ class ComErrorLogger:
         msg += ', error percentage: ' + str(err_percent) + '*10^(-3)%,\n'
         freq = self.get_error_frequency(err_cnt, error.time)
         msg += 'error frequency: ' + freq
+        msg += error.extra_data
         self.logger.log(msg)
+
 
     def get_error_percentage(self, err_cnt, packets_received_num):
         MULTIPLY_FACTOR = 100000
