@@ -48,11 +48,12 @@ class SerialManager(Observer):
             print(str(curr_time) + ' heartbeats matching')
 
     def update_heartbeat_timeout(self):
-        timeout = self.curr_heartbeat_period * 0.8
-        if timeout <= 0.1:
-            self.timeout = 0.1
-        else:
-            self.timeout = timeout
+        # timeout = self.curr_heartbeat_period * 0.8
+        # if timeout <= 0.1:
+        #     self.timeout = 0.1
+        # else:
+        #     self.timeout = timeout
+        self.timeout = self.curr_heartbeat_period
 
     @staticmethod
     def serial_ports():
