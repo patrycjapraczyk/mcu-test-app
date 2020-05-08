@@ -130,6 +130,14 @@ th.big, td.big {
     width: 70%;
 }
 
+th.small-4, td.small-4 {
+    width: 12%;
+}
+
+th.big-4, td.big-4 {
+    width: 64%;
+}
+
 tr:not(.table-head){
     cursor: pointer;
 }

@@ -16,7 +16,7 @@ class MainController:
         self.com_interface = ComInterfaceFactory.get_interface(self.INTERFACE_TYPE, self.com_error_storage)
         self.data_storage = DataStorage()
         self.stopped = False
-        # data = Data()
+         # data = Data()
         # data.complete_data = 'aa00180000000fbb324b8d00000003000001000000020081'
         # self.data_storage.curr_data = data
         # data.add_header_info('aa00180000000fbb324b8d00')
@@ -61,6 +61,9 @@ class MainController:
 
     def get_data(self, data_id):
         return self.data_storage.get_data(data_id)
+
+    def get_com_err(self):
+        return self.com_error_storage.com_error_arr
 
 
 
