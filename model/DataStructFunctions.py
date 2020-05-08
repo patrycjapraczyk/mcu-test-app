@@ -6,4 +6,7 @@ class DataStructFunctions:
 
     @staticmethod
     def get_key(my_dict: dict, value):
-        my_dict.keys()[my_dict.values().index(value)]
+        values = list(my_dict.values())
+        index = values.index(value)
+        keys = list(my_dict.keys())
+        return keys[index]
