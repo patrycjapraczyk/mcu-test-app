@@ -15,6 +15,7 @@ class MainController:
         self.com_error_storage = ComErrorStorage()
         self.com_interface = ComInterfaceFactory.get_interface(self.INTERFACE_TYPE, self.com_error_storage)
         self.data_storage = DataStorage()
+        self.stopped = False
         data = Data()
         #data.complete_data = 'aa001900000000000000000100006666000233330003333381'
         #self.data_storage.curr_data = data
