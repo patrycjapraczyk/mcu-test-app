@@ -37,18 +37,35 @@ def settings():
     # TODO: else show the warning pop-up and do not redirect   ---flash in Flask
 
 
+@app.route('/settings')
+def settings_open():
+    return render_template("index.html", data_packets=main_controller.get_all_data(),
+                           heartbeat_periods=main_controller.get_heartbeat_periods(),
+                           ecc_check_periods=main_controller.get_ecc_check_periods(),
+                           )
+    # TODO: else show the warning pop-up and do not redirect   ---flash in Flask
+
 @app.route('/index')
 def index():
-    return render_template("index.html", data_packets= main_controller.get_all_data(),
-                           heartbeat_periods=main_controller.get_heartbeat_periods(),
-                           ecc_check_periods=main_controller.get_ecc_check_periods()
-                           )
+    return render_template("index.html", data_packets= main_controller.get_all_data())
 
 
 @app.route('/reset', methods=['GET'])
 def reset():
     main_controller.send_rest_request()
     return redirect(url_for('index'))
+
+
+@app.route('/more_info', methods=['GET'])
+def more_info():
+    curr_data_id = request.args['curr_data_id']
+    curr_data = main_controller.get_data(int(curr_data_id))
+    main_controller.curr_data = curr_data
+    return render_template("index.html", data_packets=main_controller.get_all_data(),
+                           heartbeat_periods=main_controller.get_heartbeat_periods(),
+                           ecc_check_periods=main_controller.get_ecc_check_periods(),
+                           curr_data=main_controller.curr_data
+                           )
 
 
 if __name__ == '__main__':

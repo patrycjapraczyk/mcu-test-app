@@ -34,3 +34,9 @@ class DataStorage:
         self.data_cnt += 1
         self.prev_data = self.curr_data
         self.curr_data = Data()
+
+    def get_data(self, id):
+        for data in self.data_arr:
+            if data.data_index == id:
+                return data
+        return None

@@ -4,13 +4,14 @@
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='./js/side_menu.js') }}"></script>
-    <script src="{{ url_for('static', filename='./js/settings.js') }}"></script>
 {% endblock %}
 {% block body %}
     <div draggable="true" class="main center">
     <span class="menu-top">
-        <!--<button class="button-icon"><i class="fas fa-stop"></i></button>-->
-        <button id="settings-button" class="button-icon"><i class="fas fa-cog"></i></button>
+        <button class="button-icon"><i class="fas fa-stop"></i></button>
+        <button id="settings-button" class="button-icon" onclick="window.location.href='{{ url_for( 'settings_open' ) }}';">
+            <i class="fas fa-cog"></i>
+        </button>
         <!--<button class="button-icon">reset&nbsp;<i class="fas fa-info-circle"></i></button>-->
         <button class="button-icon">mem-error&nbsp;<i class="fas fa-info-circle"></i></button>
         <button class="button-icon">com-error&nbsp;<i class="fas fa-info-circle"></i></button>
@@ -32,7 +33,7 @@
             </thead>
             <tbody class="scroll-tbody-y">
             {% for data in data_packets %}
-                <tr>
+                <tr onclick="window.location.href='{{ url_for( 'more_info' , curr_data_id=data.data_index ) }}';" >
                     <td class="small">{{ loop.index }}.</td>
                     <td class="small">{{ data.time }}</td>
                     <td class="big">{{ '0x' + data.complete_data }}</td>
@@ -41,59 +42,68 @@
             </tbody>
         </table>
     </span>
+    {%  if request.path == url_for('index') %}
         <span id="control-panel" class="side-menu center">
-        <button id="reset" class="button-red">Reset request</button>
-    </span>
-    <span id="settings" class="side-menu pop-up-menu center hidden">
-        <div id="close-settings" class="close"><i class="fas fa-times"></i></div>
-        <form class="content-wrapper" method="POST" action="{{ url_for('settings') }}">
-            <div class="elem1">
-                <div class="label centered">Heartbeat Period [ms]:</div>
-                <div class="drop-down-select centered">
-                    <select name="heartbeat_period">
-                        {% for period in heartbeat_periods %}
-                            <option value={{ period }}>{{ period }}</option>
-                        {% endfor %}
-                    </select>
+            <button id="reset" class="button-red">Reset request</button>
+        </span>
+    {% endif %}
+    {% if request.path == url_for('settings_open') %}
+        <span id="settings" class="side-menu pop-up-menu center">
+            <div id="close-settings" class="close" onclick="window.location.href='{{ url_for( 'index' ) }}'"><i class="fas fa-times"></i></div>
+            <form class="content-wrapper" method="POST" action="{{ url_for('settings') }}">
+                <div class="elem1">
+                    <div class="label centered">Heartbeat Period [ms]:</div>
+                    <div class="drop-down-select centered">
+                        <select name="heartbeat_period">
+                            {% for period in heartbeat_periods %}
+                                <option value={{ period }}>{{ period }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    </div>
+                <div class="elem1">
+                    <div class="label centered">ECC_check Period [ms]:</div>
+                    <div class="drop-down-select centered">
+                        <select name="ecc_period">
+                            {% for period in ecc_check_periods %}
+                                <option value={{period}}>{{period}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
+            <!--
+                <div class="elem1">
+                    <div class="label centered">Data format:</div>
+                    <div class="drop-down-select centered">
+                        <select>
+                            <option value="HEX">HEX</option>
+                            <option value="BIN">BIN</option>
+                        </select>
+                    </div>
                 </div>
-            <div class="elem1">
-                <div class="label centered">ECC_check Period [ms]:</div>
-                <div class="drop-down-select centered">
-                    <select name="ecc_period">
-                        {% for period in ecc_check_periods %}
-                            <option value={{period}}>{{period}}</option>
-                        {% endfor %}
-                    </select>
+                -->
+                <div class="elem1">
+                    <button class="button-ok"><b>OK &nbsp;</b><i class="fas fa-check"></i></button>
                 </div>
+            </form>
+        </span>
+    {% endif %}
+    {% if request.path == url_for('more_info') %}
+        <span id="info" class="side-menu center pop-up-menu">
+            <div id="close-info" class="close" onclick="window.location.href='{{ url_for( 'index' ) }}'"><i class="fas fa-times"></i></div>
+            <div class="content-wrapper">
+                {%  if curr_data %}
+                    <div class="text-side">Index: {{ curr_data.data_index}}</div>
+                    <div class="text-side"> Data length: {{ curr_data.packet_len }} bytes</div>
+                    <div class="text-side"> Checksum: {{ curr_data.checksum }}</div>
+                    <div class="text-side">Purpose: {{ curr_data.purpose }}</div>
+                {% else %}
+                    No data selected!
+                {% endif %}
             </div>
-        <!--
-            <div class="elem1">
-                <div class="label centered">Data format:</div>
-                <div class="drop-down-select centered">
-                    <select>
-                        <option value="HEX">HEX</option>
-                        <option value="BIN">BIN</option>
-                    </select>
-                </div>
-            </div>
-            -->
-            <div class="elem1">
-                <button class="button-ok"><b>OK &nbsp;</b><i class="fas fa-check"></i></button>
-            </div>
-        </form>
-    </span>
-        <span id="info" class="side-menu center pop-up-menu hidden">
-        <div class="close"><i class="fas fa-times"></i></div>
-        <div class="content-wrapper">
-            <div class="text-side">Index: 1</div>
-            <div class="text-side"> Data length: 30 bytes</div>
-            <div class="text-side"> Checksum: 0x48283</div>
-            <div class="text-side">Purpose: RESET</div>
-        </div>
-    </span>
+        </span>
+    {% endif %}
         <span class="menu-bottom">
-
         <!--<button class="elem2 button-download">Download&nbsp;<i class="fas fa-download"></i></button> -->
             <div class="elem2 warning" id="pointer">Status: warning</div>
         </span>

@@ -7,7 +7,6 @@ class ComErrorLogger:
     FILE_NAME = 'com_errors.txt'
 
     def __init__(self):
-        #self.start = self.get_curr_time()
         self.logger = Logger(self.FILE_NAME)
         self.start = Time.get_curr_time_ns()
         self.logger.log(' COMMUNICATION ERRORS:\n')
@@ -22,7 +21,6 @@ class ComErrorLogger:
         msg += 'error frequency: ' + freq
         msg += error.extra_data
         self.logger.log(msg)
-
 
     def get_error_percentage(self, err_cnt, packets_received_num):
         MULTIPLY_FACTOR = 100000

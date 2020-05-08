@@ -1,6 +1,7 @@
 from model.Calculator import Calculator
 from model.GlobalConstants import GlobalConstants
 from model.StrManipulator import StrManipulator
+from model.DataStructFunctions import DataStructFunctions
 
 
 class Data:
@@ -15,6 +16,7 @@ class Data:
         self.data_index = 0
         self.data_index_hex = ''
         self.len_of_hex = 0 #number of digits in hexadecimal representation
+        self.purpose = ''
 
     def to_str(self):
         return str(vars(self))
@@ -38,6 +40,7 @@ class Data:
                                             GlobalConstants.MSG_CODE_END_INDEX)
         msg_code = Calculator.get_int(msg_code)
         self.msg_code = msg_code
+        self.purpose = DataStructFunctions.get_key(GlobalConstants.MESSAGE_CODE_DICT, msg_code)
 
     def extract_data_counter(self, data_header: str):
         data_index = StrManipulator.substring(data_header, GlobalConstants.DATA_COUNTER_START_INDEX,

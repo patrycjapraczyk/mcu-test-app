@@ -19,6 +19,7 @@ class MainController:
         #data.complete_data = 'aa001900000000000000000100006666000233330003333381'
         #self.data_storage.curr_data = data
         #self.data_storage.save_curr_data()
+        #self.curr_data = None
 
     def start_test(self, serial_port, baudrate):
         self.com_interface.init_connection(serial_port, int(baudrate))
@@ -49,6 +50,9 @@ class MainController:
 
     def set_ecc_period(self, ecc_check_period):
         return self.com_interface.set_ecc_period(ecc_check_period)
+
+    def get_data(self, data_id):
+        return self.data_storage.get_data(data_id)
 
 
 

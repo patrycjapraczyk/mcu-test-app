@@ -1,7 +1,7 @@
 from model.GlobalConstants import GlobalConstants
 from model.Checksum import Checksum
 from model.Calculator import Calculator
-from model.ListFunctions import ListFunctions
+from model.DataStructFunctions import DataStructFunctions
 
 
 class DataPacketFactory:
@@ -132,7 +132,7 @@ class DataPacketFactory:
 
     @staticmethod
     def append_data(data: bytearray, data_content: bytearray):
-        data_content_paired = list(ListFunctions.chunk(data_content, 2))
+        data_content_paired = list(DataStructFunctions.chunk(data_content, 2))
         num_seq = range(0, len(data_content_paired))
         num_seq = list(map(lambda x: Calculator.get_bytearray(x, bytelen=2), num_seq))
 
