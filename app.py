@@ -48,7 +48,7 @@ def settings_open():
 
 @app.route('/index')
 def index():
-    return render_template("index.html", data_packets= main_controller.get_all_data(), stopped=main_controller.stopped)
+    return render_template("index.html", data_packets=main_controller.get_all_data(), stopped=main_controller.stopped)
 
 
 @app.route('/reset', methods=['GET'])

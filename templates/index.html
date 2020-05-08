@@ -36,26 +36,26 @@
                 <thead>
                     <tr class="table-head">
                         <th class="small-4">
-                            <div>Counter</div>
+                            Counter
                         </th>
                         <th class="small-4">
-                            <div>Time</div>
+                            Time
                         </th>
                         <th class="small-4">
-                            <div>Type</div>
+                            Type
                         </th>
                         <th class="big-4">
-                            <div>Data received</div>
+                            Data received
                         </th>
                     </tr>
                 </thead>
                 <tbody class="scroll-tbody-y">
                     {% for com_err in com_errors %}
                         <tr>
-                            <td class="small-4">{{ loop.index }}.</td>
-                            <td class="small-4">{{ com_err.time }}</td>
-                             <td class="small-4">{{ com_err.type }}.</td>
-                            <td class="big-4">{{ '0x' + com_err.packet }}</td>
+                            <td class="small-4 select-text">{{ loop.index }}.</td>
+                            <td class="small-4 select-text">{{ com_err.time_hour }}</td>
+                             <td class="small-4 select-text">{{ com_err.type }}.</td>
+                            <td class="big-4 select-text">{{ '0x' + com_err.packet }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -67,13 +67,13 @@
             <thead>
             <tr class="table-head">
                 <th class="small">
-                    <div>Counter</div>
+                    Counter
                 </th>
                 <th class="small">
-                    <div>Time</div>
+                    Time
                 </th>
                 <th class="big">
-                    <div>Data received</div>
+                    Data received
                 </th>
             </tr>
             </thead>
@@ -140,10 +140,10 @@
             <div id="close-info" class="close" onclick="window.location.href='{{ url_for( 'index' ) }}'"><i class="fas fa-times"></i></div>
             <div class="content-wrapper">
                 {%  if curr_data %}
-                    <div class="text-side">Index: {{ curr_data.data_index}}</div>
-                    <div class="text-side"> Data length: {{ curr_data.packet_len }} bytes</div>
-                    <div class="text-side"> Checksum: {{ curr_data.checksum }}</div>
-                    <div class="text-side">Purpose: {{ curr_data.purpose }}</div>
+                    <div class="text-side select-text">Index: {{ curr_data.data_index}}</div>
+                    <div class="text-side select-text"> Data length: {{ curr_data.packet_len }} bytes</div>
+                    <div class="text-side select-text"> Checksum: {{ curr_data.checksum }}</div>
+                    <div class="text-side select-text">Purpose: {{ curr_data.purpose }}</div>
                 {% else %}
                     No data selected!
                 {% endif %}

@@ -7,6 +7,7 @@ class ComError:
         if type in GlobalConstants.COM_ERROR_TYPES:
             self.type = type
 
-        self.time = Time.get_curr_time()
+        self.time = Time.get_curr_time_ns()
+        self.time_hour = Time.get_curr_time()
         self.packet = packet
         self.extra_data = extra_data
