@@ -15,3 +15,6 @@ class ComErrorStorage:
 
     def get_err_total(self):
         return len(self.com_error_arr)
+
+    def end(self, total_packets):
+        self.com_error_logger.log_end(total_packets)

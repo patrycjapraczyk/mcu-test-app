@@ -31,6 +31,12 @@ class MainController:
         analysis_thread.start()
         heartbeat_thread.start()
 
+    def stop_test(self):
+        self.stopped = True
+        self.com_interface.stop()
+        total_packets_received = self.data_storage.data_cnt
+        self.com_error_storage.end(total_packets_received)
+
     def get_all_data(self):
         return self.data_storage.data_arr
 

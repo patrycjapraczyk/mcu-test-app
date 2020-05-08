@@ -8,8 +8,12 @@
 {% block body %}
     <div draggable="true" class="main center">
     <span class="menu-top">
-        <button class="button-icon"><i class="fas fa-stop"></i></button>
-        <button id="settings-button" class="button-icon" onclick="window.location.href='{{ url_for( 'settings_open' ) }}';">
+        <button {% if stopped %} class="button-icon disabled" {% else %} class="button-icon" {% endif %}
+                onclick="window.location.href='{{ url_for( 'stop_test' ) }}';">
+            <i class="fas fa-stop"></i>
+        </button>
+        <button id="settings-button" {% if stopped %} class="button-icon disabled" {% else %} class="button-icon" {% endif %}
+                onclick="window.location.href='{{ url_for( 'settings_open' ) }}';">
             <i class="fas fa-cog"></i>
         </button>
         <!--<button class="button-icon">reset&nbsp;<i class="fas fa-info-circle"></i></button>-->

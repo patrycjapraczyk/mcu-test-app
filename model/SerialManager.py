@@ -21,6 +21,7 @@ class SerialManager(Observer):
     HEARTBEAT_PERIODS_UPPER = [500, 1000]
 
     def __init__(self, com_error_storage: ComErrorStorage):
+        self.__stopped = False
         self.com_error_storage = com_error_storage
         self.read_data_queue = Queue()
         self.send_data_queue = Queue()
@@ -145,10 +146,13 @@ class SerialManager(Observer):
                 self.heartbeat_id += 1
 
     def heartbeat_loop(self):
-        while True:
+        while self.__stopped is False:
             self.send_heartbeat_data()
             self.read_data()
             self.check_heartbeat_received()
+
+    def stop(self):
+        self.__stopped = True
 
     def has_timeout_passed(self):
         cur_time = Time.get_curr_time_ns()

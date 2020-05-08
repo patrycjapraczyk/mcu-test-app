@@ -10,3 +10,6 @@ class FileManager:
 
     def file_write(self, msg):
         self.f.write(msg)
+        self.f.flush()
+
+

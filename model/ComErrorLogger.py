@@ -35,3 +35,8 @@ class ComErrorLogger:
         else:
             freq = ' <infinite frequency> '
         return freq
+
+    def log_end(self, packets_received):
+        curr_time = Time.get_curr_time()
+        self.logger.log('\nTest ended at: ' + str(curr_time))
+        self.logger.log(', packets received: ' + str(packets_received))

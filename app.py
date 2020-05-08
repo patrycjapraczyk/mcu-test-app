@@ -47,7 +47,7 @@ def settings_open():
 
 @app.route('/index')
 def index():
-    return render_template("index.html", data_packets= main_controller.get_all_data())
+    return render_template("index.html", data_packets= main_controller.get_all_data(), stopped=main_controller.stopped)
 
 
 @app.route('/reset', methods=['GET'])
@@ -66,6 +66,12 @@ def more_info():
                            ecc_check_periods=main_controller.get_ecc_check_periods(),
                            curr_data=main_controller.curr_data
                            )
+
+
+@app.route('/stop_test')
+def stop_test():
+    main_controller.stop_test()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
