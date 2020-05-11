@@ -1,158 +1,211 @@
 {% extends 'base.html' %}
 {% block css %}
-    <link rel="stylesheet" href="../static/css/styles.css">
+<link rel="stylesheet" href="../static/css/styles.css">
 {% endblock %}
 {% block scripts %}
-    <script src="{{ url_for('static', filename='./js/side_menu.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/side_menu.js') }}"></script>
 {% endblock %}
 {% block body %}
-    <div draggable="true" class="main center">
+<div draggable="true" class="main center">
     <span class="menu-top">
-    {% if request.path != url_for('com_err') %}
+        {% if request.path != url_for('com_err') and request.path != url_for('mem_err')  and request.path != url_for('ecc_check_addresses')%}
         <button {% if stopped %} class="button-icon disabled" {% else %} class="button-icon" {% endif %}
-                onclick="window.location.href='{{ url_for( 'stop_test' ) }}';">
+            onclick="window.location.href='{{ url_for( 'stop_test' ) }}';">
             <i class="fas fa-stop"></i>
         </button>
-        <button id="settings-button" {% if stopped %} class="button-icon disabled" {% else %} class="button-icon" {% endif %}
-                onclick="window.location.href='{{ url_for( 'settings_open' ) }}';">
+        <button id="settings-button" {% if stopped %} class="button-icon disabled" {% else %} class="button-icon"
+            {% endif %} onclick="window.location.href='{{ url_for( 'settings_open' ) }}';">
             <i class="fas fa-cog"></i>
         </button>
         <!--<button class="button-icon">reset&nbsp;<i class="fas fa-info-circle"></i></button>-->
-        <button class="button-icon"
-                onclick="window.location.href='{{ url_for( 'com_err' ) }}';">
-                com-error&nbsp;<i class="fas fa-info-circle"></i>
+        <button class="button-icon" onclick="window.location.href='{{ url_for( 'com_err' ) }}';">
+            com-error&nbsp;<i class="fas fa-info-circle"></i>
         </button>
-        <button class="button-icon">mem-error&nbsp;<i class="fas fa-info-circle"></i></button>
-    {% else %}
-        <button class="button-icon"
-        onclick="window.location.href='{{ url_for( 'index' ) }}';">
+        <button class="button-icon" onclick="window.location.href='{{ url_for( 'mem_err' ) }}';">
+            mem-error&nbsp;<i class="fas fa-info-circle"></i>
+        </button>
+        {% else %}
+        <button class="button-icon" onclick="window.location.href='{{ url_for( 'index' ) }}';">
             <i class="fas fa-arrow-left"></i>
         </button>
-    {% endif %}
+        {% endif %}
     </span>
     {% if request.path == url_for('com_err') %}
-        <span class="left-menu">
-            <table CELLSPACING=0>
-                <thead>
-                    <tr class="table-head">
-                        <th class="small-4">
-                            Counter
-                        </th>
-                        <th class="small-4">
-                            Time
-                        </th>
-                        <th class="small-4">
-                            Type
-                        </th>
-                        <th class="big-4">
-                            Data received
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="scroll-tbody-y">
-                    {% for com_err in com_errors %}
-                        <tr>
-                            <td class="small-4 select-text">{{ loop.index }}.</td>
-                            <td class="small-4 select-text">{{ com_err.time_hour }}</td>
-                             <td class="small-4 select-text">{{ com_err.type }}.</td>
-                            <td class="big-4 select-text">{{ '0x' + com_err.packet }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </span>
-    {% else %}
-        <span class="left-menu">
+    <span class="left-menu">
         <table CELLSPACING=0>
             <thead>
-            <tr class="table-head">
-                <th class="small">
-                    Counter
-                </th>
-                <th class="small">
-                    Time
-                </th>
-                <th class="big">
-                    Data received
-                </th>
-            </tr>
+                <tr class="table-head">
+                    <th class="small-4">
+                        Counter
+                    </th>
+                    <th class="small-4">
+                        Time
+                    </th>
+                    <th class="small-4">
+                        Type
+                    </th>
+                    <th class="big-4">
+                        Data received
+                    </th>
+                </tr>
             </thead>
             <tbody class="scroll-tbody-y">
-            {% for data in data_packets %}
-                <tr onclick="window.location.href='{{ url_for( 'more_info' , curr_data_id=data.data_index ) }}';" >
+                {% for com_err in com_errors %}
+                <tr>
+                    <td class="small-4 select-text">{{ loop.index }}.</td>
+                    <td class="small-4 select-text">{{ com_err.time_hour }}</td>
+                    <td class="small-4 select-text">{{ com_err.type }}.</td>
+                    <td class="big-4 select-text">{{ '0x' + com_err.packet }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </span>
+    {% elif request.path == url_for('mem_err') or request.path == url_for('ecc_check_addresses') %}
+    <span class="left-menu">
+        <table CELLSPACING=0>
+            <thead>
+                <tr class="table-head">
+                    <th class="medium-4">
+                        ID
+                    </th>
+                    <th class="medium-4">
+                        Time
+                    </th>
+                    <th class="medium-4">
+                        Overflow
+                    </th>
+                    <th class="medium-4">
+                        err_num
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="scroll-tbody-y">
+                {% for mem_err in mem_errors %}
+                <tr onclick="window.location.href='{{ url_for( 'ecc_check_addresses' , curr_mem_err=mem_err.index ) }}';">
+                    <td class="medium-4 select-text">{{ mem_err.mem_error_id }}</td>
+                    <td class="medium-4 select-text">{{ mem_err.time }}</td>
+                    <td class="medium-4 select-text">{{ mem_err.overflow }}.</td>
+                    <td class="medium-4 select-text">{{ mem_err.error_num }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </span>
+    {% else %}
+    <span class="left-menu">
+        <table CELLSPACING=0>
+            <thead>
+                <tr class="table-head">
+                    <th class="small">
+                        Counter
+                    </th>
+                    <th class="small">
+                        Time
+                    </th>
+                    <th class="big">
+                        Data received
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="scroll-tbody-y">
+                {% for data in data_packets %}
+                <tr onclick="window.location.href='{{ url_for( 'more_info' , curr_data_id=data.data_index ) }}';">
                     <td class="small">{{ loop.index }}.</td>
                     <td class="small">{{ data.time }}</td>
                     <td class="big">{{ '0x' + data.complete_data }}</td>
                 </tr>
-            {% endfor %}
+                {% endfor %}
             </tbody>
         </table>
     </span>
     {% endif %}
-    {%  if request.path == url_for('index') %}
-        <span id="control-panel" class="side-menu center">
-            <button id="reset" class="button-red">Reset request</button>
-        </span>
+    {% if request.path == url_for('index') %}
+    <span id="control-panel" class="side-menu center">
+        <button id="reset" class="button-red">Reset request</button>
+    </span>
     {% endif %}
     {% if request.path == url_for('settings_open') %}
-        <span id="settings" class="side-menu pop-up-menu center">
-            <div id="close-settings" class="close" onclick="window.location.href='{{ url_for( 'index' ) }}'"><i class="fas fa-times"></i></div>
-            <form class="content-wrapper" method="POST" action="{{ url_for('settings') }}">
-                <div class="elem1">
-                    <div class="label centered">Heartbeat Period [ms]:</div>
-                    <div class="drop-down-select centered">
-                        <select name="heartbeat_period">
-                            {% for period in heartbeat_periods %}
-                                <option value={{ period }}>{{ period }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    </div>
-                <div class="elem1">
-                    <div class="label centered">ECC_check Period [ms]:</div>
-                    <div class="drop-down-select centered">
-                        <select name="ecc_period">
-                            {% for period in ecc_check_periods %}
-                                <option value={{period}}>{{period}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+    <span id="settings" class="side-menu pop-up-menu center">
+        <div id="close-settings" class="close" onclick="window.location.href='{{ url_for( 'index' ) }}'"><i
+                class="fas fa-times"></i></div>
+        <form class="content-wrapper" method="POST" action="{{ url_for('settings') }}">
+            <div class="elem1">
+                <div class="label centered">Heartbeat Period [ms]:</div>
+                <div class="drop-down-select centered">
+                    <select name="heartbeat_period">
+                        {% for period in heartbeat_periods %}
+                        <option value={{ period }}>{{ period }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
+            </div>
+            <div class="elem1">
+                <div class="label centered">ECC_check Period [ms]:</div>
+                <div class="drop-down-select centered">
+                    <select name="ecc_period">
+                        {% for period in ecc_check_periods %}
+                        <option value={{ period }}>{{ period }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
             <!--
-                <div class="elem1">
-                    <div class="label centered">Data format:</div>
-                    <div class="drop-down-select centered">
-                        <select>
-                            <option value="HEX">HEX</option>
-                            <option value="BIN">BIN</option>
-                        </select>
+                    <div class="elem1">
+                        <div class="label centered">Data format:</div>
+                        <div class="drop-down-select centered">
+                            <select>
+                                <option value="HEX">HEX</option>
+                                <option value="BIN">BIN</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                -->
-                <div class="elem1">
-                    <button class="button-ok"><b>OK &nbsp;</b><i class="fas fa-check"></i></button>
-                </div>
-            </form>
-        </span>
+                    -->
+            <div class="elem1">
+                <button class="button-ok"><b>OK &nbsp;</b><i class="fas fa-check"></i></button>
+            </div>
+        </form>
+    </span>
     {% endif %}
     {% if request.path == url_for('more_info') %}
-        <span id="info" class="side-menu center pop-up-menu">
-            <div id="close-info" class="close" onclick="window.location.href='{{ url_for( 'index' ) }}'"><i class="fas fa-times"></i></div>
-            <div class="content-wrapper">
-                {%  if curr_data %}
-                    <div class="text-side select-text">Index: {{ curr_data.data_index}}</div>
-                    <div class="text-side select-text"> Data length: {{ curr_data.packet_len }} bytes</div>
-                    <div class="text-side select-text"> Checksum: {{ curr_data.checksum }}</div>
-                    <div class="text-side select-text">Purpose: {{ curr_data.purpose }}</div>
-                {% else %}
-                    No data selected!
-                {% endif %}
-            </div>
-        </span>
+    <span id="info" class="side-menu center pop-up-menu">
+        <div id="close-info" class="close" onclick="window.location.href='{{ url_for('index') }}'"><i
+                class="fas fa-times"></i></div>
+        <div class="content-wrapper">
+            {% if curr_data %}
+            <div class="text-side select-text">Index: {{ curr_data.data_index }}</div>
+            <div class="text-side select-text"> Data length: {{ curr_data.packet_len }} bytes</div>
+            <div class="text-side select-text"> Checksum: {{ curr_data.checksum }}</div>
+            <div class="text-side select-text">Purpose: {{ curr_data.purpose }}</div>
+            {% else %}
+            No data selected!
+            {% endif %}
+        </div>
+    </span>
     {% endif %}
-        <span class="menu-bottom">
+    {% if request.path == url_for('ecc_check_addresses') %}
+    <span id="info" class="side-menu center pop-up-menu">
+        <div id="close-info" class="close" onclick="window.location.href='{{ url_for('mem_err') }}'"><i
+                class="fas fa-times"></i></div>
+        <div class="content-wrapper">
+            {% if curr_mem_err %}
+            <div class="text-side select-text">Addresses: </div>
+            <div class="text-side addresses-box">
+                <ul>
+                    {% for address in curr_mem_err.faulty_addresses %}
+                        <li>{{ address }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% else %}
+            No data selected!
+            {% endif %}
+        </div>
+    </span>
+    {% endif %}
+    <span class="menu-bottom">
         <!--<button class="elem2 button-download">Download&nbsp;<i class="fas fa-download"></i></button> -->
-            <div class="elem2 warning" id="pointer">Status: warning</div>
-        </span>
-    </div>
+        <div class="elem2 warning" id="pointer">Status: warning</div>
+    </span>
+</div>
 {% endblock %}

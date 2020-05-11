@@ -14,7 +14,7 @@ class MemErrorLogger:
 
     def log_error(self, error: MemErrorData):
         msg = '\n[' + str(error.mem_error_id) + '] '
-        msg += 'error number: ' + error.error_num
+        msg += 'error number: ' + str(error.error_num)
         msg += ', overflow:  ' + str(error.overflow) + '\n'
         msg += ', faulty addresses: \n'
         for faulty_addr in error.faulty_addresses:

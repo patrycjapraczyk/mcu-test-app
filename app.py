@@ -73,6 +73,18 @@ def com_err():
     return render_template("index.html", com_errors=main_controller.get_com_err())
 
 
+@app.route('/mem_err')
+def mem_err():
+    return render_template("index.html", mem_errors=main_controller.get_mem_err_list())
+
+
+@app.route('/ecc_check_addresses', methods=['GET'])
+def ecc_check_addresses():
+    curr_mem_err_id = request.args['curr_mem_err']
+    curr_mem_err = main_controller.get_mem_err(int(curr_mem_err_id))
+    return render_template("index.html", mem_errors=main_controller.get_mem_err_list(), curr_mem_err=curr_mem_err)
+
+
 @app.route('/stop_test')
 def stop_test():
     main_controller.stop_test()

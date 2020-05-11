@@ -24,7 +24,7 @@ class DataStorage:
         curr_time = Time.get_curr_time()
         self.curr_data.time = curr_time
 
-        data_type = self.curr_data.msg_code
+        data_type = self.curr_data.purpose
         if not data_type == 'HEARTBEAT':
             self.data_arr.append(self.curr_data)
         if data_type == 'ECC_CHECKED':

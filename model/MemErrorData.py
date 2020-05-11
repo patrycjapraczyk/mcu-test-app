@@ -7,13 +7,14 @@ from model.Time import Time
 
 
 class MemErrorData:
-    def __init__(self, data: str):
+    def __init__(self, data: str, index: int):
         self.data = data
         self.faulty_addresses = []
         self.time = Time.get_curr_time()
         self.mem_error_id = 0
         self.error_num = 0
         self.overflow = False
+        self.index = index
 
         self.clean_data_indices()
         self.extract_mem_error_id()
@@ -22,9 +23,10 @@ class MemErrorData:
         self.extract_addresses()
 
     def clean_data_indices(self):
-        self.data = StrManipulator.split_string(self.data, GlobalConstants.PAYLOAD_INDICES_LEN)
-        self.data = StrManipulator.remove_every_other(self.data, True)
-        self.data = StrManipulator.list_into_str(self.data)
+        data = StrManipulator.split_string(self.data, GlobalConstants.PAYLOAD_INDICES_LEN)
+        data = StrManipulator.remove_every_other(data, True)
+        data = StrManipulator.list_into_str(data)
+        self.data = data
 
     def extract_mem_error_id(self):
         id = StrManipulator.substring(self.data, GlobalConstants.MEM_ERROR_INDEX_START, GlobalConstants.MEM_ERROR_INDEX_END)

@@ -138,6 +138,10 @@ th.big-4, td.big-4 {
     width: 64%;
 }
 
+th.medium-4, td.medium-4 {
+    width: 25%;
+}
+
 tr:not(.table-head){
     cursor: pointer;
 }
@@ -325,4 +329,8 @@ scroll-tbody-y { height:80px; overflow:auto;}
 
 .button-ok:hover {
     background-color: rgba(20, 150, 35, 1);
+}
+
+.addresses-box {
+    
 }
