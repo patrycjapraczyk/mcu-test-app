@@ -315,6 +315,13 @@ scroll-tbody-y { height:80px; overflow:auto;}
     margin: 2em;
 }
 
+.address-list{
+    position: relative;
+    width: 70%;
+    height: 80%;
+    margin: 1em;
+}
+
 .table-wrapper {
     position: relative;
     height: 90%;
@@ -331,6 +338,8 @@ scroll-tbody-y { height:80px; overflow:auto;}
     background-color: rgba(20, 150, 35, 1);
 }
 
-.addresses-box {
-    
+.address-list {
+    margin: 1em;
+    height: 70%;
+    overflow-y: scroll;
 }

@@ -189,14 +189,12 @@
                 class="fas fa-times"></i></div>
         <div class="content-wrapper">
             {% if curr_mem_err %}
-            <div class="text-side select-text">Addresses: </div>
-            <div class="text-side addresses-box">
-                <ul>
-                    {% for address in curr_mem_err.faulty_addresses %}
-                        <li>{{ address }}</li>
-                    {% endfor %}
+                <div class="text-side select-text">Addresses:</div>
+                <ul class="address-list select-text">
+                {% for address in curr_mem_err.faulty_addresses %}
+                    <li>{{ address }}</li>
+                {% endfor %}
                 </ul>
-            </div>
             {% else %}
             No data selected!
             {% endif %}
