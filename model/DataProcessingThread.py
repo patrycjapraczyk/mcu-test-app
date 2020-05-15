@@ -57,6 +57,12 @@ class DataProcessingThread(Thread, Subject):
             while len(self.curr_data_str) < GlobalConstants.HEADER_LEN:
                 self.curr_data_str += self.q.get()
 
+            while curr_data_item.data_payload != '':
+                new_data = self.q.get()
+                if new_data != '':
+                    self.curr_data_str += new_data
+                    break
+
             # try to find end code if data analysis of current data has not been finished
             if curr_data_item.data_payload: #if data_payload is not empty
                 self.find_end_index()
@@ -77,7 +83,6 @@ class DataProcessingThread(Thread, Subject):
 
             # remove all all data that has been analysed and saved already
             self.curr_data_str = self.curr_data_str[GlobalConstants.DATA_PAYLOAD_START_INDEX:]
-
             self.find_end_index()
 
 
