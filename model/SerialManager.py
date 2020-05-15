@@ -46,7 +46,7 @@ class SerialManager(Observer):
         if heartbeat_received != '' and heartbeat_received == self.last_heartbeat_sent_id:
             self.heartbeat_received = True
             curr_time = Time.get_curr_time()
-            print(str(curr_time) + ' heartbeats matching')
+            print(str(curr_time) + ' heartbeats matching, heartbeat received: ' + str(heartbeat_received))
 
     def update_heartbeat_timeout(self):
         # timeout = self.curr_heartbeat_period * 0.8
