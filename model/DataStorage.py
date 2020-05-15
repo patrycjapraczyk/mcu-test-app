@@ -1,6 +1,7 @@
 from model.Data import Data
 from model.MemErrorStorage import MemErrorStorage
 from model.Time import Time
+from model.GlobalConstants import GlobalConstants
 
 
 class DataStorage:
@@ -23,6 +24,10 @@ class DataStorage:
         """
         curr_time = Time.get_curr_time()
         self.curr_data.time = curr_time
+
+        #add end index
+        self.curr_data.data_payload += GlobalConstants.END_CODE
+        self.curr_data.complete_data += GlobalConstants.END_CODE
 
         print(str(curr_time) + ' saving data: ' + self.curr_data.complete_data)
 

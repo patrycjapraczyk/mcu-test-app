@@ -139,7 +139,7 @@ class DataProcessingThread(Thread, Subject):
 
         payload = self.curr_data_str[:end_index]
         curr_data_item.data_payload += payload
-        curr_data_item.complete_data += payload + '81'
+        curr_data_item.complete_data += payload
 
         # remove the analysed data from curr_data_str
         self.curr_data_str = self.curr_data_str[end_index + GlobalConstants.START_END_CODE_LENGTH:]
