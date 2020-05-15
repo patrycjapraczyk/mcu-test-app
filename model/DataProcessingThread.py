@@ -54,8 +54,11 @@ class DataProcessingThread(Thread, Subject):
             # If there is data to be analysed from the previous data str,
             # do not take the new data off the queue
             curr_data_item = self.data_storage.curr_data
-            while len(self.curr_data_str) < GlobalConstants.HEADER_LEN:
-                self.curr_data_str += self.q.get()
+
+            if curr_data_item.data_payload == '':
+                while len(self.curr_data_str) < GlobalConstants.HEADER_LEN:
+                    new_data = self.q.get()
+                    self.curr_data_str += new_data
 
             while curr_data_item.data_payload != '':
                 new_data = self.q.get()
