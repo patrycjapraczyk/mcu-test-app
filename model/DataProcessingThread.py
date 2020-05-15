@@ -55,6 +55,7 @@ class DataProcessingThread(Thread, Subject):
             # do not take the new data off the queue
             curr_data_item = self.data_storage.curr_data
 
+            # get data off the queue to be analysed
             if curr_data_item.data_payload == '':
                 while len(self.curr_data_str) < GlobalConstants.HEADER_LEN:
                     new_data = self.q.get()
@@ -96,7 +97,7 @@ class DataProcessingThread(Thread, Subject):
         end_code_index = curr_data_item.len_of_hex - GlobalConstants.DATA_PAYLOAD_START_INDEX - GlobalConstants.START_END_CODE_LENGTH - payload_length
 
         # if data_str is shorter than expected length
-        if data_length < end_code_index:
+        if data_length <= end_code_index:
             self.add_data_payload(data_length)
             return False
         else:
@@ -117,7 +118,7 @@ class DataProcessingThread(Thread, Subject):
                 self.data_storage.save_curr_data()
             # if can't find the end code within data
             else:
-                com_error = ComError('MISSING END CODE', self.curr_data_str)
+                com_error = ComError('MISSING END CODE', curr_data_item.complete_data)
                 self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
 
             return True
