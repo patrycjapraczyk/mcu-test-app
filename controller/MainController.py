@@ -16,13 +16,13 @@ class MainController:
         self.com_interface = ComInterfaceFactory.get_interface(self.INTERFACE_TYPE, self.com_error_storage)
         self.data_storage = DataStorage()
         self.stopped = False
-        data = Data()
-        data.complete_data = 'aa002000000000168d0499040000ffff00010000000201000003000000040081'
-        data.data_payload = '0000ffff000100000002010000030000000400'
-        self.data_storage.curr_data = data
-        data.add_header_info('aa002000000000168d049904')
-        self.data_storage.save_curr_data()
-        self.curr_data = None
+        # data = Data()
+        # data.complete_data = 'aa002000000000168d0499040000ffff00010000000201000003000000040081'
+        # data.data_payload = '0000ffff000100000002010000030000000400'
+        # self.data_storage.curr_data = data
+        # data.add_header_info('aa002000000000168d049904')
+        # self.data_storage.save_curr_data()
+        # self.curr_data = None
 
     def start_test(self, serial_port, baudrate):
         self.com_interface.init_connection(serial_port, int(baudrate))

@@ -122,6 +122,8 @@ class SerialManager(Observer):
 
         if data != '':
             self.read_data_queue.put(data)
+            curr_time = Time.get_curr_time()
+            print(str(curr_time) + ' read data: ' + data)
 
     def add_data_to_send_queue(self, data: bytearray):
         """
