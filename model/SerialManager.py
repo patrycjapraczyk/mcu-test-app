@@ -1,6 +1,7 @@
-import sys, glob, serial, threading, time
+import sys, glob, serial, math
 
 from queue import Queue
+
 from model.GlobalConstants import GlobalConstants
 from model.DataPacketFactory import DataPacketFactory
 from model.ComErrorStorage import ComErrorStorage
@@ -12,7 +13,6 @@ from model.Calculator import Calculator
 
 
 class SerialManager(Observer):
-    #alter these parameters for your own usecase
     BYTESIZE = 8
     NANOSECONDS_PER_MILI_SECOND = 1000000
     BAUDRATES = [115200, 57600, 19200, 9600]
@@ -28,11 +28,11 @@ class SerialManager(Observer):
         self.sent_counter = 0
         self.last_heartbeat_sent_id = ''
         self.last_sent_time = 0
-        self.cur_baudrate = 0
 
-        self.heartbeat_id = 0
+        self.cur_heartbeat_id = 0
         self.heartbeat_period_rates = self.HEARTBEAT_PERIODS_ALL
 
+        self.cur_baudrate = 0
         self.curr_heartbeat_period = 1000
         self.cur_ecc_period = 1000
 
@@ -99,7 +99,7 @@ class SerialManager(Observer):
         if baudrate in self.BAUDRATES and port in self.serial_ports():
             self.cur_baudrate = baudrate
             self.serial_port = serial.Serial(port, baudrate,
-                                                 self.BYTESIZE, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0)
+                                             self.BYTESIZE, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0)
             self.adjust_curr_heartbeat_rate()
 
     def read_data(self):
@@ -134,10 +134,10 @@ class SerialManager(Observer):
         else:
             self.heartbeat_received = False
 
-            if self.heartbeat_id >= GlobalConstants.HEARTBEAT_ID_MAX:
-                self.heartbeat_id = 0
+            if self.cur_heartbeat_id >= GlobalConstants.HEARTBEAT_ID_MAX:
+                self.cur_heartbeat_id = 0
             else:
-                self.heartbeat_id += 1
+                self.cur_heartbeat_id += 1
 
     def heartbeat_loop(self):
         while self.__stopped is False:
@@ -155,18 +155,25 @@ class SerialManager(Observer):
             return False
         return True
 
+    @staticmethod
+    def get_max_frames_num(hb_period, baudrate):
+        return math.floor(hb_period * baudrate / (GlobalConstants.SERIAL_BYTE_LEN * GlobalConstants.MAX_PACKET_LEN) -
+                          GlobalConstants.HEARTBEAT_LEN / GlobalConstants.MAX_PACKET_LENN)
+
     def send_heartbeat_data(self):
-        #TODO limit the number of data packets that can be sent at one go
-        while not self.send_data_queue.empty():
+        data_sent = 0
+        max_frames = SerialManager.get_max_frames_num(self.curr_heartbeat_period, self.cur_baudrate)
+        while not self.send_data_queue.empty() and data_sent < max_frames:
             data = self.send_data_queue.get()
             self.send_data_packet(data)
+            data_sent += 1
 
         curr_heartbeat_period_id = GlobalConstants.HEARTBEAT_PERIODS[self.curr_heartbeat_period]
         heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT', self.sent_counter,
-                                                        params={'heartbeat_id': self.heartbeat_id,
+                                                        params={'heartbeat_id': self.cur_heartbeat_id,
                                                                 'heartbeat_period': curr_heartbeat_period_id})
 
-        self.last_heartbeat_sent_id = self.heartbeat_id
+        self.last_heartbeat_sent_id = self.cur_heartbeat_id
         self.send_data_packet(heartbeat_packet)
 
     def send_data_packet(self, data: bytearray):
@@ -208,9 +215,5 @@ class SerialManager(Observer):
 
     def send_ecc_period_change(self, period_id):
         ecc_period_change_packet = DataPacketFactory.get_packet('ECC_PERIOD_CHANGE', self.sent_counter,
-                                     params={'period_id': period_id})
+                                                                params={'period_id': period_id})
         self.add_data_to_send_queue(ecc_period_change_packet)
-
-
-
-
