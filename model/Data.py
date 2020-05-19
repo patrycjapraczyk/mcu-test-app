@@ -5,9 +5,9 @@ from model.DataStructFunctions import DataStructFunctions
 
 
 class Data:
-    def __init__(self):
+    def __init__(self, complete_data=''):
         self.time = ''
-        self.complete_data = ''
+        self.complete_data = complete_data
         self.data_payload = ''
         self.payload_len = 0
         self.packet_len = ''
@@ -17,6 +17,13 @@ class Data:
         self.data_index_hex = ''
         self.len_of_hex = 0 #number of digits in hexadecimal representation
         self.purpose = ''
+        self.data_payload_value = ''
+
+        if self.complete_data:
+            header = StrManipulator.substring(self.complete_data, 0, GlobalConstants.DATA_PAYLOAD_START_INDEX)
+            payload = StrManipulator.substring(self.complete_data, GlobalConstants.DATA_PAYLOAD_START_INDEX, len(self.complete_data))
+            self.add_header_info(header)
+            self.data_payload = payload
 
     def to_str(self):
         return str(vars(self))
@@ -52,3 +59,10 @@ class Data:
         checksum = StrManipulator.substring(data_header, GlobalConstants.CHECKSUM_START_INDEX,
                                             GlobalConstants.CHECKSUM_END_INDEX)
         self.checksum = Calculator.get_int(checksum)
+
+    def extract_data_payload(self):
+        # remove indices
+        payload = StrManipulator.split_string(self.data_payload, GlobalConstants.PAYLOAD_INDICES_LEN)
+        payload = StrManipulator.remove_every_other(payload, True)
+        payload = StrManipulator.list_into_str(payload)
+        self.data_payload_value = payload

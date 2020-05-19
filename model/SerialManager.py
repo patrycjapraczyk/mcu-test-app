@@ -49,11 +49,6 @@ class SerialManager(Observer):
             print(str(curr_time) + ' heartbeats matching, heartbeat received: ' + str(heartbeat_received))
 
     def update_heartbeat_timeout(self):
-        # timeout = self.curr_heartbeat_period * 0.8
-        # if timeout <= 0.1:
-        #     self.timeout = 0.1
-        # else:
-        #     self.timeout = timeout
         self.timeout = self.curr_heartbeat_period
 
     @staticmethod
@@ -157,8 +152,9 @@ class SerialManager(Observer):
 
     @staticmethod
     def get_max_frames_num(hb_period, baudrate):
+        MS_OFFSET = 1000
         return math.floor(hb_period * baudrate / (GlobalConstants.SERIAL_BYTE_LEN * GlobalConstants.MAX_PACKET_LEN) -
-                          GlobalConstants.HEARTBEAT_LEN / GlobalConstants.MAX_PACKET_LENN)
+                          (GlobalConstants.HEARTBEAT_LEN / GlobalConstants.MAX_PACKET_LEN)/MS_OFFSET)
 
     def send_heartbeat_data(self):
         data_sent = 0
@@ -172,7 +168,6 @@ class SerialManager(Observer):
         heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT', self.sent_counter,
                                                         params={'heartbeat_id': self.cur_heartbeat_id,
                                                                 'heartbeat_period': curr_heartbeat_period_id})
-
         self.last_heartbeat_sent_id = self.cur_heartbeat_id
         self.send_data_packet(heartbeat_packet)
 

@@ -56,16 +56,19 @@ class DataProcessingThread(Thread, Subject):
             curr_data_item = self.data_storage.curr_data
 
             # get data off the queue to be analysed
+            ##########
+            # for a new data piece
             if curr_data_item.data_payload == '':
                 while len(self.curr_data_str) < GlobalConstants.HEADER_LEN:
                     new_data = self.q.get()
                     self.curr_data_str += new_data
-
+            # if there is leftover, unfinished data
             while curr_data_item.data_payload != '':
                 new_data = self.q.get()
                 if new_data != '':
                     self.curr_data_str += new_data
                     break
+            ##########
 
             # try to find end code if data analysis of current data has not been finished
             if curr_data_item.data_payload: #if data_payload is not empty
@@ -126,10 +129,8 @@ class DataProcessingThread(Thread, Subject):
     def check_heartbeat(self, curr_data_item: Data):
         HEARTBEAT_RESPONSE_CODE = 0x01
         if curr_data_item.msg_code == HEARTBEAT_RESPONSE_CODE:
-            #TODO: move data extraction into a data packet
-            heartbeat = StrManipulator.split_string(curr_data_item.data_payload, GlobalConstants.PAYLOAD_INDICES_LEN)
-            heartbeat = StrManipulator.remove_every_other(heartbeat, True)
-            heartbeat = StrManipulator.list_into_str(heartbeat)
+            curr_data_item.extract_data_payload()
+            heartbeat = curr_data_item.data_payload_value
             heartbeat = Calculator.get_int(heartbeat)
             
             self.heartbeat_received_id = heartbeat
@@ -141,6 +142,7 @@ class DataProcessingThread(Thread, Subject):
         payload = self.curr_data_str[:end_index]
         curr_data_item.data_payload += payload
         curr_data_item.complete_data += payload
+        curr_data_item.extract_data_payload()
 
         # remove the analysed data from curr_data_str
         self.curr_data_str = self.curr_data_str[end_index + GlobalConstants.START_END_CODE_LENGTH:]
