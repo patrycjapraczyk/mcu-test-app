@@ -152,9 +152,8 @@ class SerialManager(Observer):
 
     @staticmethod
     def get_max_frames_num(hb_period, baudrate):
-        MS_OFFSET = 1000
-        return math.floor(hb_period * baudrate / (GlobalConstants.SERIAL_BYTE_LEN * GlobalConstants.MAX_PACKET_LEN) -
-                          (GlobalConstants.HEARTBEAT_LEN / GlobalConstants.MAX_PACKET_LEN)/MS_OFFSET)
+        return math.floor((hb_period * baudrate / (GlobalConstants.SERIAL_BYTE_LEN * GlobalConstants.MAX_PACKET_LEN) -
+                          GlobalConstants.HEARTBEAT_LEN / GlobalConstants.MAX_PACKET_LEN)/100)
 
     def send_heartbeat_data(self):
         data_sent = 0
@@ -165,7 +164,7 @@ class SerialManager(Observer):
             data_sent += 1
 
         curr_heartbeat_period_id = GlobalConstants.HEARTBEAT_PERIODS[self.curr_heartbeat_period]
-        heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT', self.sent_counter,
+        heartbeat_packet = DataPacketFactory.get_packet('HEARTBEAT',
                                                         params={'heartbeat_id': self.cur_heartbeat_id,
                                                                 'heartbeat_period': curr_heartbeat_period_id})
         self.last_heartbeat_sent_id = self.cur_heartbeat_id
@@ -177,6 +176,7 @@ class SerialManager(Observer):
         data_str = Calculator.get_hex_str(data)
         curr_time = Time.get_curr_time()
         print(str(curr_time) + ' sent data: ' + data_str)
+        DataPacketFactory.adjust_data_cnt(data, self.sent_counter)
         self.serial_port.write(data)
         self.last_sent_time = Time.get_curr_time_ns()
 
@@ -209,6 +209,6 @@ class SerialManager(Observer):
         return False
 
     def send_ecc_period_change(self, period_id):
-        ecc_period_change_packet = DataPacketFactory.get_packet('ECC_PERIOD_CHANGE', self.sent_counter,
+        ecc_period_change_packet = DataPacketFactory.get_packet('ECC_PERIOD_CHANGE',
                                                                 params={'period_id': period_id})
         self.add_data_to_send_queue(ecc_period_change_packet)

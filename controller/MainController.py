@@ -51,7 +51,7 @@ class MainController:
 
     def send_rest_request(self):
         counter = self.com_interface.sent_counter
-        reset_packet = DataPacketFactory.get_packet('RESET', counter)
+        reset_packet = DataPacketFactory.get_packet('RESET')
         self.com_interface.add_data_to_send_queue(reset_packet)
 
     def set_heartbeat_period(self, heartbeat_period):
