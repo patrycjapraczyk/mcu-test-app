@@ -16,17 +16,10 @@ class MemErrorData:
         self.overflow = False
         self.index = index
 
-        self.clean_data_indices()
         self.extract_mem_error_id()
         self.extract_err_cnt()
         self.check_overflow()
         self.extract_addresses()
-
-    def clean_data_indices(self):
-        data = StrManipulator.split_string(self.data, GlobalConstants.PAYLOAD_INDICES_LEN)
-        data = StrManipulator.remove_every_other(data, True)
-        data = StrManipulator.list_into_str(data)
-        self.data = data
 
     def extract_mem_error_id(self):
         id = StrManipulator.substring(self.data, GlobalConstants.MEM_ERROR_INDEX_START, GlobalConstants.MEM_ERROR_INDEX_END)

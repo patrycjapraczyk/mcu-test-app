@@ -28,6 +28,8 @@ class ComErrorLogger:
         return percent
 
     def get_error_frequency(self, err_cnt, end):
+        """
+        """
         elapsed_time = (end - self.start)
         if elapsed_time > 0:
             freq = (err_cnt / elapsed_time) * 1000
@@ -37,6 +39,11 @@ class ComErrorLogger:
         return freq
 
     def log_end(self, packets_received):
+        """
+            to be called at the end of the test
+            logs an end message with end timestamp and total number of packets received
+        :param packets_received: total number of all packets received
+        """
         curr_time = Time.get_curr_time()
         self.logger.log('\nTest ended at: ' + str(curr_time))
         self.logger.log(', packets received: ' + str(packets_received))

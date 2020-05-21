@@ -62,7 +62,8 @@ class Data:
 
     def extract_data_payload(self):
         # remove indices
-        payload = StrManipulator.split_string(self.data_payload, GlobalConstants.PAYLOAD_INDICES_LEN)
-        payload = StrManipulator.remove_every_other(payload, True)
-        payload = StrManipulator.list_into_str(payload)
-        self.data_payload_value = payload
+        if not self.data_payload_value:
+            payload = StrManipulator.split_string(self.data_payload, GlobalConstants.PAYLOAD_INDICES_LEN)
+            payload = StrManipulator.remove_every_other(payload, True)
+            payload = StrManipulator.list_into_str(payload)
+            self.data_payload_value = payload

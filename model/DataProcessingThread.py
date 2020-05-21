@@ -79,8 +79,7 @@ class DataProcessingThread(Thread, Subject):
             expected_start_code = self.curr_data_str[:GlobalConstants.START_END_CODE_LENGTH]
             # if start index was not found
             if expected_start_code != GlobalConstants.START_CODE:
-                com_error = ComError('MISSING START CODE', self.curr_data_str)
-                self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+                self.add_com_error('MISSING START CODE')
                 continue
 
             if len(self.curr_data_str) < GlobalConstants.DATA_PAYLOAD_START_INDEX: continue
@@ -92,6 +91,10 @@ class DataProcessingThread(Thread, Subject):
             self.curr_data_str = self.curr_data_str[GlobalConstants.DATA_PAYLOAD_START_INDEX:]
             self.find_end_index()
 
+    def add_com_error(self, error_str, extra_data=''):
+        com_error = ComError(error_str, self.curr_data_str, extra_data)
+        self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+        self.data_storage.reset_curr_data()
 
     def find_end_index(self):
         curr_data_item = self.data_storage.curr_data
@@ -121,13 +124,17 @@ class DataProcessingThread(Thread, Subject):
                 self.data_storage.save_curr_data()
             # if can't find the end code within data
             else:
-                com_error = ComError('MISSING END CODE', curr_data_item.complete_data)
-                self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+                self.add_com_error('MISSING END CODE')
 
             return True
 
     def check_heartbeat(self, curr_data_item: Data):
-        HEARTBEAT_RESPONSE_CODE = 0x01
+        """
+            if current data is HEARTBEAT_RESPONSE, extracts HEARTBEAT_ID
+            and notifies observers
+        :param curr_data_item:
+        """
+        HEARTBEAT_RESPONSE_CODE = GlobalConstants.MESSAGE_CODE_DICT['HEARTBEAT_RESPONSE']
         if curr_data_item.msg_code == HEARTBEAT_RESPONSE_CODE:
             curr_data_item.extract_data_payload()
             heartbeat = curr_data_item.data_payload_value
@@ -142,7 +149,6 @@ class DataProcessingThread(Thread, Subject):
         payload = self.curr_data_str[:end_index]
         curr_data_item.data_payload += payload
         curr_data_item.complete_data += payload
-        curr_data_item.extract_data_payload()
 
         # remove the analysed data from curr_data_str
         self.curr_data_str = self.curr_data_str[end_index + GlobalConstants.START_END_CODE_LENGTH:]
@@ -171,8 +177,7 @@ class DataProcessingThread(Thread, Subject):
         num_seq = list(range(0, num_seq_len))
 
         if index_list != num_seq:
-            com_error = ComError('UNORDERED DATA CONTENT', self.data_storage.curr_data.complete_data)
-            self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+            self.add_com_error('UNORDERED DATA CONTENT')
             return False
 
         return True
@@ -192,15 +197,14 @@ class DataProcessingThread(Thread, Subject):
 
         if prev_index != GlobalConstants.MAX_DATA_INDEX:
             if curr_index != prev_index + 1:
-                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data.complete_data, extra_data=' prev data_index: '+str(prev_index) +
-                                                                                                                 ', curr data index: ' + str(curr_index) + '\n')
-                self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+                
+                self.add_com_error('UNORDERED DATA_CNT',extra_data=' prev data_index: '+str(prev_index) +
+                                                                    ', curr data index: ' + str(curr_index) + '\n')
                 return False
         else:
             if curr_index != 0:
-                com_error = ComError('UNORDERED DATA_CNT', self.data_storage.curr_data.complete_data, extra_data=' prev data_index: '+str(prev_index) + ''
-                                                                                                                                                        ', curr data index: ' + str(curr_index) + '\n')
-                self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+                self.add_com_error('UNORDERED DATA_CNT',extra_data=' prev data_index: '+str(prev_index) +
+                                                                    ', curr data index: ' + str(curr_index) + '\n')
                 return False
         return True
 
