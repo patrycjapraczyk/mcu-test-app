@@ -1,5 +1,5 @@
-from model.GlobalConstants import GlobalConstants
-from model.Time import Time
+from model.StaticClasses.GlobalConstants import GlobalConstants
+from model.StaticClasses.Time import Time
 
 
 class ComError:

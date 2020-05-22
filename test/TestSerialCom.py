@@ -1,13 +1,13 @@
 import serial, time
 
-from model.DataPacketFactory import DataPacketFactory
-from model.GlobalConstants import GlobalConstants
-from model.StrManipulator import StrManipulator
-from model.Calculator import Calculator
+from model.StaticClasses.DataPacketFactory import DataPacketFactory
+from model.StaticClasses.GlobalConstants import GlobalConstants
+from model.StaticClasses.StrManipulator import StrManipulator
+from model.StaticClasses.Calculator import Calculator
 from queue import Queue
-from model.Data import Data
-from model.SerialManager import SerialManager
-from model.DataStructFunctions import DataStructFunctions
+from model.Data.Data import Data
+from model.Communication.SerialManager import SerialManager
+from model.StaticClasses.DataStructFunctions import DataStructFunctions
 from threading import Thread
 
 

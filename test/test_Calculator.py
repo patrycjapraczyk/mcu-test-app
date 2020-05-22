@@ -1,5 +1,5 @@
 from unittest import TestCase
-from model.Calculator import Calculator
+from model.StaticClasses.Calculator import Calculator
 
 class TestCalculator(TestCase):
     def test_get_bytearray(self):

@@ -1,6 +1,6 @@
 from unittest import TestCase
-from model.Data import Data
-from model.GlobalConstants import GlobalConstants
+from model.Data.Data import Data
+from model.StaticClasses.GlobalConstants import GlobalConstants
 
 
 class TestData(TestCase):

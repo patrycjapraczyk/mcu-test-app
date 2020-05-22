@@ -1,13 +1,13 @@
-from model.GlobalConstants import GlobalConstants
-from model.Checksum import Checksum
-from model.Calculator import Calculator
-from model.DataStructFunctions import DataStructFunctions
+from model.StaticClasses.GlobalConstants import GlobalConstants
+from model.StaticClasses.Checksum import Checksum
+from model.StaticClasses.Calculator import Calculator
+from model.StaticClasses.DataStructFunctions import DataStructFunctions
 
 
 class DataPacketFactory:
 
     @staticmethod
-    def get_packet(type: str, params: object = {}) -> object:
+    def get_packet(type: str, params: object = {}) -> bytearray:
         data = bytearray(b'')
         if type == 'RESET_REQUEST':
             data = DataPacketFactory.get_reset(params)

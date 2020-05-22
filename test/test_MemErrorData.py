@@ -1,5 +1,5 @@
 from unittest import TestCase
-from model.MemErrorData import MemErrorData
+from model.Data.MemErrorData import MemErrorData
 
 
 class TestMemErrorData(TestCase):

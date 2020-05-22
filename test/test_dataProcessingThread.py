@@ -1,11 +1,8 @@
-import time
 from queue import Queue
 from unittest import TestCase
 
-from model.Calculator import Calculator
-from model.Data import Data
+from model.Data.Data import Data
 from model.DataProcessingThread import DataProcessingThread
-from model.GlobalConstants import GlobalConstants
 
 
 class TestDataProcessingThread(TestCase):

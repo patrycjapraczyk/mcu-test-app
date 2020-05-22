@@ -16,6 +16,7 @@ def start():
     return render_template("start.html", serial_ports=serial_ports, baudrates=baudrates)
 
 
+
 @app.route('/start_test', methods=['POST'])
 def start_test():
     serial_port = request.form.get('port')

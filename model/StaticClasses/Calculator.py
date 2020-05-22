@@ -1,5 +1,6 @@
 import binascii
 
+
 class Calculator:
     @staticmethod
     def get_int(hexnum: str) -> int:
@@ -35,7 +36,7 @@ class Calculator:
             if bitlen % 8 != 0:
                 bytelen += 1
             if decnum == 0:
-               bytelen = 1
+                bytelen = 1
         bytes = decnum.to_bytes(bytelen, byteorder='big')
         byte_array = bytearray(bytes)
         return byte_array

@@ -1,10 +1,9 @@
-from model.ComInterfaceFactory import ComInterfaceFactory
-from model.DataPacketFactory import DataPacketFactory
+from model.Communication.ComInterfaceFactory import ComInterfaceFactory
+from model.StaticClasses.DataPacketFactory import DataPacketFactory
 from model.DataProcessingThread import DataProcessingThread
-from model.ComErrorStorage import ComErrorStorage
-from model.DataStorage import DataStorage
-from model.GlobalConstants import GlobalConstants
-from model.Data import Data
+from model.Data.ComErrorStorage import ComErrorStorage
+from model.Data.DataStorage import DataStorage
+from model.StaticClasses.GlobalConstants import GlobalConstants
 from threading import Thread
 
 
@@ -16,13 +15,6 @@ class MainController:
         self.com_interface = ComInterfaceFactory.get_interface(self.INTERFACE_TYPE, self.com_error_storage)
         self.data_storage = DataStorage()
         self.stopped = False
-        # data = Data()
-        # data.complete_data = 'aa002000000000168d0499040000ffff00010000000201000003000000040081'
-        # data.data_payload = '0000ffff000100000002010000030000000400'
-        # self.data_storage.curr_data = data
-        # data.add_header_info('aa002000000000168d049904')
-        # self.data_storage.save_curr_data()
-        # self.curr_data = None
 
     def start_test(self, serial_port, baudrate):
         self.com_interface.init_connection(serial_port, int(baudrate))
@@ -50,7 +42,6 @@ class MainController:
         return list(GlobalConstants.ECC_CHECK_PERIODS.keys())
 
     def send_rest_request(self):
-        counter = self.com_interface.sent_counter
         reset_packet = DataPacketFactory.get_packet('RESET')
         self.com_interface.add_data_to_send_queue(reset_packet)
 

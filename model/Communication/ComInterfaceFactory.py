@@ -1,10 +1,8 @@
-from model.ETHSocketManager import ETHSocketManager
-from model.SerialManager import SerialManager
-from model.ComErrorStorage import ComErrorStorage
+from model.Communication.ETHSocketManager import ETHSocketManager
+from model.Communication.SerialManager import SerialManager
 
 
 class ComInterfaceFactory:
-
     @staticmethod
     def get_interface(type, com_error_storage):
         if type == 'ETH':

@@ -1,5 +1,5 @@
-from model.ComError import ComError
-from model.ComErrorLogger import ComErrorLogger
+from model.Data.ComError import ComError
+from model.Logging.ComErrorLogger import ComErrorLogger
 
 
 class ComErrorStorage:

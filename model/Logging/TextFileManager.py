@@ -1,6 +1,7 @@
+from model.Interfaces.FileManager import FileManager
 
 
-class FileManager:
+class TextFileManager(FileManager):
     def __init__(self, FILE_NAME):
         self.FILE_NAME = FILE_NAME
         self.open_file()

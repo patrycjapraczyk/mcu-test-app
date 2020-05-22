@@ -1,6 +1,5 @@
 from unittest import TestCase
-from model.Checksum import Checksum
-from model.Calculator import Calculator
+from model.StaticClasses.Checksum import Checksum
 
 
 class TestChecksum(TestCase):

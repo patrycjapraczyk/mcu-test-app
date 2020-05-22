@@ -1,7 +1,7 @@
-from model.Calculator import Calculator
-from model.GlobalConstants import GlobalConstants
-from model.StrManipulator import StrManipulator
-from model.DataStructFunctions import DataStructFunctions
+from model.StaticClasses.Calculator import Calculator
+from model.StaticClasses.GlobalConstants import GlobalConstants
+from model.StaticClasses.StrManipulator import StrManipulator
+from model.StaticClasses.DataStructFunctions import DataStructFunctions
 
 
 class Data:

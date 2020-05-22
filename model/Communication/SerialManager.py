@@ -2,14 +2,14 @@ import sys, glob, serial, math
 
 from queue import Queue
 
-from model.GlobalConstants import GlobalConstants
-from model.DataPacketFactory import DataPacketFactory
-from model.ComErrorStorage import ComErrorStorage
-from model.ComError import ComError
+from model.StaticClasses.GlobalConstants import GlobalConstants
+from model.StaticClasses.DataPacketFactory import DataPacketFactory
+from model.Data.ComErrorStorage import ComErrorStorage
+from model.Data.ComError import ComError
 from model.Observer.Observer import Observer
 from model.Observer.Subject import Subject
-from model.Time import Time
-from model.Calculator import Calculator
+from model.StaticClasses.Time import Time
+from model.StaticClasses.Calculator import Calculator
 
 
 class SerialManager(Observer):
@@ -42,6 +42,9 @@ class SerialManager(Observer):
         self.heartbeat_received = False
 
     def update(self, subject: Subject) -> None:
+        """
+        :param subject: in this case DataProcessingThread class
+        """
         heartbeat_received = subject.heartbeat_received_id
         if heartbeat_received != '' and heartbeat_received == self.last_heartbeat_sent_id:
             self.heartbeat_received = True
@@ -152,8 +155,8 @@ class SerialManager(Observer):
 
     @staticmethod
     def get_max_frames_num(hb_period, baudrate):
-        return math.floor((hb_period * baudrate / (GlobalConstants.SERIAL_BYTE_LEN * GlobalConstants.MAX_PACKET_LEN) -
-                          GlobalConstants.HEARTBEAT_LEN / GlobalConstants.MAX_PACKET_LEN)/100)
+        return math.floor((hb_period/100 * baudrate / (GlobalConstants.SERIAL_BYTE_LEN * GlobalConstants.MAX_PACKET_LEN) -
+                          GlobalConstants.HEARTBEAT_LEN / GlobalConstants.MAX_PACKET_LEN))
 
     def send_heartbeat_data(self):
         data_sent = 0

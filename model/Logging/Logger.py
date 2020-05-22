@@ -1,11 +1,11 @@
-from model.Time import Time
-from model.FileManager import FileManager
+from model.StaticClasses.Time import Time
+from model.Logging.TextFileManager import TextFileManager
 
 
 class Logger:
 
     def __init__(self, FILE_NAME):
-        self.f_manager = FileManager(FILE_NAME)
+        self.f_manager = TextFileManager(FILE_NAME)
         self.log_start()
         i = 0
 

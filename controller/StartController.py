@@ -1,4 +1,4 @@
-from model.SerialManager import SerialManager
+from model.Communication.SerialManager import SerialManager
 
 class StartController:
     def get_serial_ports(self):

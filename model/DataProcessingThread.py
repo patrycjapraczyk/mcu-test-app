@@ -1,14 +1,14 @@
 from queue import Queue
 from threading import Thread
 
-from model.Calculator import Calculator
-from model.DataStorage import DataStorage
-from model.Data import Data
-from model.GlobalConstants import GlobalConstants
-from model.StrManipulator import StrManipulator
-from model.Checksum import Checksum
-from model.ComErrorStorage import ComErrorStorage
-from model.ComError import ComError
+from model.StaticClasses.Calculator import Calculator
+from model.Data.DataStorage import DataStorage
+from model.Data.Data import Data
+from model.StaticClasses.GlobalConstants import GlobalConstants
+from model.StaticClasses.StrManipulator import StrManipulator
+from model.StaticClasses.Checksum import Checksum
+from model.Data.ComErrorStorage import ComErrorStorage
+from model.Data.ComError import ComError
 
 from model.Observer.Observer import Observer
 from model.Observer.Subject import Subject

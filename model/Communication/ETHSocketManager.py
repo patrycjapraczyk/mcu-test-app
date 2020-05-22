@@ -2,7 +2,7 @@ import socket
 from queue import Queue
 
 from model.DataProcessingThread import DataProcessingThread
-from model.GlobalConstants import GlobalConstants
+from model.StaticClasses.GlobalConstants import GlobalConstants
 
 
 class ETHSocketManager:

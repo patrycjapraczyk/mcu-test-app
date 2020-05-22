@@ -1,6 +1,5 @@
 from unittest import TestCase
-from model.GlobalConstants import GlobalConstants
-from model.DataPacketFactory import DataPacketFactory
+from model.StaticClasses.DataPacketFactory import DataPacketFactory
 
 
 class TestDataPacketFactory(TestCase):

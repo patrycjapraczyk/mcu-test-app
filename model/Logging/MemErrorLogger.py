@@ -1,6 +1,6 @@
-from model.Time import Time
-from model.Logger import Logger
-from model.MemErrorData import MemErrorData
+from model.StaticClasses.Time import Time
+from model.Logging.Logger import Logger
+from model.Data.MemErrorData import MemErrorData
 
 
 class MemErrorLogger:

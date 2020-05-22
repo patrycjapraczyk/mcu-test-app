@@ -1,5 +1,5 @@
-from model.MemErrorData import MemErrorData
-from model.MemErrorLogger import MemErrorLogger
+from model.Data.MemErrorData import MemErrorData
+from model.Logging.MemErrorLogger import MemErrorLogger
 
 
 class MemErrorStorage:

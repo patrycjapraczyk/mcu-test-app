@@ -1,9 +1,7 @@
-from model.Data import Data
-from model.StrManipulator import StrManipulator
-from model.GlobalConstants import GlobalConstants
-from model.Calculator import Calculator
-from model.StrManipulator import StrManipulator
-from model.Time import Time
+from model.StaticClasses.GlobalConstants import GlobalConstants
+from model.StaticClasses.Calculator import Calculator
+from model.StaticClasses.StrManipulator import StrManipulator
+from model.StaticClasses.Time import Time
 
 
 class MemErrorData:

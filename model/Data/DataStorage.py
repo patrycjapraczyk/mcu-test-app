@@ -1,7 +1,7 @@
-from model.Data import Data
-from model.MemErrorStorage import MemErrorStorage
-from model.Time import Time
-from model.GlobalConstants import GlobalConstants
+from model.Data.Data import Data
+from model.Data.MemErrorStorage import MemErrorStorage
+from model.StaticClasses.Time import Time
+from model.StaticClasses.GlobalConstants import GlobalConstants
 
 
 class DataStorage:

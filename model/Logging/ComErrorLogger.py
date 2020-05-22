@@ -1,6 +1,6 @@
-from model.Logger import Logger
-from model.ComError import ComError
-from model.Time import Time
+from model.Logging.Logger import Logger
+from model.Data.ComError import ComError
+from model.StaticClasses.Time import Time
 
 
 class ComErrorLogger:
