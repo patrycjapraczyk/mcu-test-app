@@ -164,6 +164,7 @@ class SerialManager(Observer):
         while not self.send_data_queue.empty() and data_sent < max_frames:
             data = self.send_data_queue.get()
             self.send_data_packet(data)
+            print(data)
             data_sent += 1
 
         curr_heartbeat_period_id = GlobalConstants.HEARTBEAT_PERIODS[self.curr_heartbeat_period]

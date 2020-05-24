@@ -132,6 +132,7 @@ th.big, td.big {
 
 th.small-4, td.small-4 {
     width: 12%;
+    text-align: left;
 }
 
 th.big-4, td.big-4 {
