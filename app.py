@@ -1,10 +1,15 @@
 from flask import Flask
+from flask_jsglue import JSGlue
 from flask import render_template, redirect, request, url_for
 
 from controller.StartController import StartController
 from controller.MainController import MainController
+from model.Logging.JSONEncoder import CustomJSONEncoder
 
+jsglue = JSGlue()
 app = Flask(__name__)
+jsglue.init_app(app)
+
 start_controller = StartController()
 main_controller = MainController()
 
@@ -48,12 +53,20 @@ def settings_open():
 
 @app.route('/index')
 def index():
-    return render_template("index.html", data_packets=main_controller.get_all_data(), stopped=main_controller.stopped)
+    data_packets = main_controller.get_all_data()
+    return render_template("index.html", data_packets=data_packets, stopped=main_controller.stopped)
+
+
+@app.route('/data', methods=['GET'])
+def data():
+    data_packets = main_controller.get_all_data()
+    return CustomJSONEncoder().encode(data_packets)
 
 
 @app.route('/reset', methods=['GET'])
 def reset():
     main_controller.send_rest_request()
+    print('reset')
     return redirect(url_for('index'))
 
 

@@ -24,7 +24,7 @@ class DataStorage:
 
             clears self.curr_data
         """
-        curr_time = Time.get_curr_time()
+        curr_time = str(Time.get_curr_time())
         self.curr_data.time = curr_time
 
         self.curr_data.extract_data_payload()

@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="../static/css/styles.css">
 {% endblock %}
 {% block scripts %}
-<script src="{{ url_for('static', filename='./js/side_menu.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/index.js') }}"></script>
 {% endblock %}
 {% block body %}
 <div draggable="true" class="main center">
@@ -108,7 +108,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="scroll-tbody-y">
+            <tbody id="data_packets" class="scroll-tbody-y">
                 {% for data in data_packets %}
                 <tr onclick="window.location.href='{{ url_for( 'more_info' , curr_data_id=data.data_index ) }}';">
                     <td class="small">{{ loop.index }}.</td>
