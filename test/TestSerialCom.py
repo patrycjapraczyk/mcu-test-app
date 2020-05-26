@@ -108,7 +108,8 @@ class TestSerialCom:
                             data_len_hex = ''
 
     def analyse_data_purpose(self, data_packet: Data):
-        data_payload = data_packet.data_payload
+        data_packet.extract_data_payload()
+        data_payload = data_packet.data_payload_value
         if data_packet.purpose == 'HEARTBEAT_REQUEST':
             heartbeat = self.analyse_heartbeat(data_payload)
             self.send_data_stream(heartbeat)
@@ -127,7 +128,6 @@ class TestSerialCom:
     def send_data_stream(self, heartbeat: bytearray):
         data_sent = 0
         max_frames = SerialManager.get_max_frames_num(self.curr_heartbeat_period, TestSerialCom.BAUDRATE)
-        print('MAX FRAMES: ' + str(max_frames))
         while (not self.send_data_queue.empty()) and data_sent < max_frames:
             data = self.send_data_queue.get()
             self.send_data_packet(data)

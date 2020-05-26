@@ -5,7 +5,7 @@ $(document).ready(function () {
             type: "get",
             data: {},
             success: function (response) {
-                alert('Sent reset!')
+                alert('Sent reset!');
             },
             error: function (xhr) {
                 //Do Something to handle error
@@ -30,13 +30,13 @@ $(document).ready(function () {
                             "<td class=\"big\">" + '0x' + packet.complete_data + "</td>\n" +
                             "</tr>";
                         $('#data_packets').append(td_elem);
-                    })
+                    });
                 },
                 error: function (xhr) {
                     //Do Something to handle error
                 }
             });
-        }
+        };
 
     let get_err_percentage
         =  function() {
