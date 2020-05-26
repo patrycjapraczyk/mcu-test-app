@@ -16,5 +16,10 @@ class ComErrorStorage:
     def get_err_total(self):
         return len(self.com_error_arr)
 
+    def get_error_percentage(self, total_packets):
+        percent = ComErrorLogger.get_error_percentage(self.get_err_total(), total_packets)
+        percent = int(percent/1000)
+        return percent
+
     def end(self, total_packets):
         self.com_error_logger.log_end(total_packets)

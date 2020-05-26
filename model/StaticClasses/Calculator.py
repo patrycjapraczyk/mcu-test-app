@@ -44,7 +44,7 @@ class Calculator:
     @staticmethod
     def get_hex_str(arr: bytearray) -> str:
         """
-            prints into the console in hexadecimal format
+        returns hexadecimal str
         :param arr: bytearray
         """
         hex_representation = binascii.hexlify(arr)

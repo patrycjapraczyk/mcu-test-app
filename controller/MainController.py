@@ -32,6 +32,10 @@ class MainController:
         total_packets_received = self.data_storage.data_cnt
         self.com_error_storage.end(total_packets_received)
 
+    def get_correct_percentage(self):
+        total_packets = self.data_storage.data_cnt
+        return 100 - self.com_error_storage.get_error_percentage(total_packets)
+
     def get_all_data(self):
         return self.data_storage.data_arr
 

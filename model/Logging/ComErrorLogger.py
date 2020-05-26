@@ -12,7 +12,7 @@ class ComErrorLogger:
         self.logger.log(' COMMUNICATION ERRORS:\n')
 
     def log_error(self, error: ComError, err_cnt, packets_received_num=1):
-        err_percent = self.get_error_percentage(err_cnt, packets_received_num)
+        err_percent = ComErrorLogger.get_error_percentage(err_cnt, packets_received_num)
         msg = '\n' + str(err_cnt) + '. ' + error.type
         msg += ' for ' + error.packet + '\n'
         msg += 'STATS: time: ' + str(Time.get_curr_time())
@@ -22,8 +22,11 @@ class ComErrorLogger:
         msg += error.extra_data
         self.logger.log(msg)
 
-    def get_error_percentage(self, err_cnt, packets_received_num):
+    @staticmethod
+    def get_error_percentage(err_cnt, packets_received_num):
         MULTIPLY_FACTOR = 100000
+        if packets_received_num == 0 and err_cnt == 0:
+            return 0
         percent = (MULTIPLY_FACTOR * err_cnt) / (packets_received_num + err_cnt)
         return percent
 

@@ -66,7 +66,6 @@ def data():
 @app.route('/reset', methods=['GET'])
 def reset():
     main_controller.send_rest_request()
-    print('reset')
     return redirect(url_for('index'))
 
 
@@ -102,6 +101,13 @@ def ecc_check_addresses():
 def stop_test():
     main_controller.stop_test()
     return redirect(url_for('index'))
+
+
+@app.route('/get_correct_percentage', methods=['GET'])
+def get_correct_percentage():
+    percent = main_controller.get_correct_percentage()
+    print()
+    return str(percent)
 
 
 if __name__ == '__main__':

@@ -208,6 +208,47 @@ tr:nth-child(odd):not(.table-head):hover {
     border-right: 1em solid yellow;
 }
 
+#pointer.good {
+    background: #149623;
+    color: white;
+}
+
+#pointer.good:after {
+    border-top: 1em solid #149623;
+    border-bottom: 1em solid #149623;
+}
+
+#pointer.good:before {
+    border-right: 1em solid #149623;
+}
+
+#pointer.attention {
+    background: #F69810;
+}
+
+#pointer.attention:after {
+    border-top: 1em solid #F69810;
+    border-bottom: 1em solid #F69810;
+}
+
+#pointer.attention:before {
+    border-right: 1em solid #F69810;
+}
+
+#pointer.offline {
+    background: #e14123;
+    color: white;
+}
+
+#pointer.offline:after {
+    border-top: 1em solid #e14123;
+    border-bottom: 1em solid #e14123;
+}
+
+#pointer.offline:before {
+    border-right: 1em solid #e14123;
+}
+
 #pointer {
     width: 30%;
     min-width: 2em;
@@ -239,6 +280,11 @@ tr:nth-child(odd):not(.table-head):hover {
     height: 0;
     border-top: 1em solid transparent;
     border-bottom: 1em solid transparent;
+}
+
+#pointer #status {
+    color: inherit;
+    display: inline;
 }
 
 .text-centered {

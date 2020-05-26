@@ -10,6 +10,7 @@ from model.Observer.Observer import Observer
 from model.Observer.Subject import Subject
 from model.StaticClasses.Time import Time
 from model.StaticClasses.Calculator import Calculator
+from model.Interfaces import ComInterface
 
 
 class SerialManager(Observer):
@@ -155,8 +156,9 @@ class SerialManager(Observer):
 
     @staticmethod
     def get_max_frames_num(hb_period, baudrate):
-        return math.floor((hb_period/100 * baudrate / (GlobalConstants.SERIAL_BYTE_LEN * GlobalConstants.MAX_PACKET_LEN) -
+        max = math.floor((hb_period/1000 * baudrate / (GlobalConstants.SERIAL_BYTE_LEN * GlobalConstants.MAX_PACKET_LEN) -
                           GlobalConstants.HEARTBEAT_LEN / GlobalConstants.MAX_PACKET_LEN))
+        return max
 
     def send_heartbeat_data(self):
         data_sent = 0
