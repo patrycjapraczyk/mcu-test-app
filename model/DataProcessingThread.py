@@ -93,7 +93,7 @@ class DataProcessingThread(Thread, Subject):
 
     def add_com_error(self, error_str, extra_data=''):
         com_error = ComError(error_str, self.curr_data_str, extra_data)
-        self.com_error_storage.add_error(com_error, self.data_storage.data_cnt)
+        self.com_error_storage.add(com_error, self.data_storage.data_cnt)
         self.data_storage.reset_curr_data()
 
     def find_end_index(self):

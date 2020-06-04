@@ -60,7 +60,20 @@ class TestSerialCom:
 
         self.ecc_index += 1
 
+    def send_reset_request(self, reset_reason=''):
+        reset_reason_code = DataStructFunctions.get_key(GlobalConstants.RESET_PURPOSES, reset_reason)
+        params = {'reset_reason': ''}
+        if reset_reason_code:
+            params = {'reset_reason': reset_reason_code}
+        reset_packet = DataPacketFactory.get_packet('RESET_RESPONSE', params)
+        self.send_data_queue.put(reset_packet)
+
     def generate_ecc_check(self):
+        """"
+         generates ecc_check with memory addresses provided
+        """
+        self.send_reset_request('SYST')
+        self.send_reset_request('EXT')
         while True:
             ecc_addresses = ['000000', '111111', '222222', '333333', '444444', '555555', '666666', '777777', '888888',
                              '999999']

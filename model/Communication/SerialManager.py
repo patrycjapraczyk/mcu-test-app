@@ -129,7 +129,7 @@ class SerialManager(Observer):
     def check_heartbeat_received(self):
         if not self.heartbeat_received:
             err = ComError('NO RESPONSE', '')
-            self.com_error_storage.add_error(err, 0)
+            self.com_error_storage.add(err, 0)
         else:
             self.heartbeat_received = False
 

@@ -85,6 +85,11 @@ def com_err():
     return render_template("index.html", com_errors=main_controller.get_com_err())
 
 
+@app.route('/reset_info')
+def reset_info():
+    return render_template("index.html", reset_packets=main_controller.get_reset_packets())
+
+
 @app.route('/mem_err')
 def mem_err():
     return render_template("index.html", mem_errors=main_controller.get_mem_err_list())

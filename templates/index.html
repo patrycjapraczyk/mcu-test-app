@@ -8,7 +8,8 @@
 {% block body %}
 <div draggable="true" class="main center">
     <span class="menu-top">
-        {% if request.path != url_for('com_err') and request.path != url_for('mem_err')  and request.path != url_for('ecc_check_addresses')%}
+        {% if request.path != url_for('com_err') and request.path != url_for('mem_err')  and request.path != url_for('ecc_check_addresses')
+                and request.path != url_for('reset_info')%}
         <button {% if stopped %} class="button-icon disabled" {% else %} class="button-icon" {% endif %}
             onclick="window.location.href='{{ url_for( 'stop_test' ) }}';">
             <i class="fas fa-stop"></i>
@@ -17,7 +18,9 @@
             {% endif %} onclick="window.location.href='{{ url_for( 'settings_open' ) }}';">
             <i class="fas fa-cog"></i>
         </button>
-        <!--<button class="button-icon">reset&nbsp;<i class="fas fa-info-circle"></i></button>-->
+        <button class="button-icon" onclick="window.location.href='{{ url_for( 'reset_info' ) }}';">
+            reset&nbsp;<i class="fas fa-info-circle"></i>
+        </button>
         <button class="button-icon" onclick="window.location.href='{{ url_for( 'com_err' ) }}';">
             com-error&nbsp;<i class="fas fa-info-circle"></i>
         </button>
@@ -52,10 +55,37 @@
             <tbody class="scroll-tbody-y">
                 {% for com_err in com_errors %}
                 <tr>
-                    <td class="small-4 select-text">{{ loop.index }}.</td>
-                    <td class="small-4 select-text">{{ com_err.time_hour }}</td>
-                    <td class="medium-4 select-text">{{ com_err.type }}.</td>
-                    <td class="big-4 select-text">{{ '0x' + com_err.packet }}</td>
+                    <td class="small-4">{{ loop.index }}.</td>
+                    <td class="small-4">{{ com_err.time_hour }}</td>
+                    <td class="medium-4">{{ com_err.type }}.</td>
+                    <td class="big-4">{{ '0x' + com_err.packet }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </span>
+    {% elif request.path == url_for('reset_info') %}
+    <span class="left-menu">
+        <table CELLSPACING=0>
+            <thead>
+                <tr class="table-head">
+                    <th class="medium-3">
+                        Counter
+                    </th>
+                    <th class="medium-3">
+                        Time
+                    </th>
+                    <th class="medium-3">
+                        Reset Type
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="scroll-tbody-y">
+                {% for reset_packet in reset_packets %}
+                <tr>
+                    <td>{{ loop.index }}.</td>
+                    <td>{{ reset_packet.time_hour }}</td>
+                    <td>{{ reset_packet.type }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

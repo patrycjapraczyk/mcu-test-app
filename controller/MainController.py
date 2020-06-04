@@ -69,6 +69,10 @@ class MainController:
         mem_error_storage = self.data_storage.mem_error_storage
         return mem_error_storage.get_mem_err(index)
 
+    def get_reset_packets(self):
+        reset_storage = self.data_storage.reset_storage
+        return reset_storage.reset_arr
+
 
 
 

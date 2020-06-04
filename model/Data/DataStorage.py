@@ -1,7 +1,10 @@
 from model.Data.Data import Data
 from model.Data.MemErrorStorage import MemErrorStorage
+from model.Data.ResetStorage import ResetStorage
+from model.Data.ResetData import ResetData
 from model.StaticClasses.Time import Time
 from model.StaticClasses.GlobalConstants import GlobalConstants
+from model.StaticClasses.Calculator import Calculator
 
 
 class DataStorage:
@@ -10,6 +13,7 @@ class DataStorage:
         self.prev_data = None
         self.data_arr = []
         self.mem_error_storage = MemErrorStorage()
+        self.reset_storage = ResetStorage()
         self.curr_data = Data()
         self.last_heartbeat = None
         self.data_cnt = 0
@@ -39,7 +43,12 @@ class DataStorage:
         if not data_type == 'HEARTBEAT':
             self.data_arr.append(self.curr_data)
         if data_type == 'ECC_CHECKED':
-            self.mem_error_storage.add_error(self.curr_data.data_payload_value)
+            self.mem_error_storage.add(self.curr_data.data_payload_value)
+        elif data_type == 'RESET_RESPONSE':
+            payload_int = Calculator.get_int(self.curr_data.data_payload_value)
+            reset_purpose = GlobalConstants.RESET_PURPOSES[payload_int]
+            reset_packet = ResetData(reset_purpose)
+            self.reset_storage.add(reset_packet)
 
         self.curr_data.payload_len = len(self.curr_data.data_payload)
         self.data_cnt += 1

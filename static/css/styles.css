@@ -143,6 +143,14 @@ th.medium-4, td.medium-4 {
     width: 25%;
 }
 
+th.medium-3, td.medium-3 {
+    width: 33.3333%;
+}
+
+tr{
+    width: 100%;
+}
+
 tr:not(.table-head){
     cursor: pointer;
 }

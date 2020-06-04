@@ -11,6 +11,8 @@ class DataPacketFactory:
         data = bytearray(b'')
         if type == 'RESET_REQUEST':
             data = DataPacketFactory.get_reset(params)
+        elif type == 'RESET_RESPONSE':
+            data = DataPacketFactory.get_reset_response(params)
         elif type == 'HEARTBEAT':
             data = DataPacketFactory.get_heartbeat_request(params)
         elif type == 'HEARTBEAT_RESPONSE':
@@ -73,6 +75,19 @@ class DataPacketFactory:
         data = DataPacketFactory.init_packet()
         data.append(GlobalConstants.MESSAGE_CODE_DICT['RESET_REQUEST'])  # msg_code
         data.append(0x81)  # end_code
+
+        DataPacketFactory.append_len(data)
+        DataPacketFactory.append_checksum(data)
+        return data
+
+    @staticmethod
+    def get_reset_response(params):
+        data = DataPacketFactory.init_packet()
+        data.append(GlobalConstants.MESSAGE_CODE_DICT['RESET_RESPONSE']) #msg_code
+        reset_reason = params['reset_reason']
+        reset_reason = Calculator.get_bytearray(reset_reason, 1)
+        DataPacketFactory.append_data(data, reset_reason)
+        data.append(0x81)
 
         DataPacketFactory.append_len(data)
         DataPacketFactory.append_checksum(data)

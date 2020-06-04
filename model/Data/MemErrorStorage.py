@@ -9,7 +9,7 @@ class MemErrorStorage:
         self.mem_error_logger = MemErrorLogger()
         self.cnt = 0
 
-    def add_error(self, err: str):
+    def add(self, err: str):
         err = MemErrorData(err, self.cnt)
         self.mem_error_arr.append(err)
         self.mem_error_logger.log_error(err)

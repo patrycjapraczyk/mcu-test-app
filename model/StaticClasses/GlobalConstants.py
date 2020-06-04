@@ -1,4 +1,6 @@
 class GlobalConstants:
+
+    # protocol related constants
     START_CODE = 'aa'
     END_CODE = '81'
 
@@ -34,12 +36,6 @@ class GlobalConstants:
     DATA_INDEX_LENGTH = 8
 
     HEX_BASE = 168
-    MAX_DATA_INDEX = 4294967295
-    HEARTBEAT_ID_MAX = 4294967295
-    DATA_INDEX_MAX = 4294967295
-
-    HEARTBEAT_LEN = 24
-    HEARTBEAT_RESPONSE_LEN = 21 * HEX_DIGITS_PER_BYTE
 
     SERIAL_BYTE_LEN = 10
 
@@ -52,9 +48,16 @@ class GlobalConstants:
         'ECC_PERIOD_CHANGE': 0x05
     }
 
+    # max values
+    MAX_DATA_INDEX = 4294967295
+    HEARTBEAT_ID_MAX = 4294967295
+    DATA_INDEX_MAX = 4294967295
+
+    # Communication error related constants
     COM_ERROR_TYPES = {'NO RESPONSE', 'MISSING START CODE', 'MISSING END CODE', 'UNORDERED DATA_CNT',
                        'UNORDERED DATA CONTENT'}
 
+    # ECC check related constants
     MEM_ERROR_INDEX_START_BYTE = 0
     MEM_ERROR_INDEX_START = MEM_ERROR_INDEX_START_BYTE * HEX_DIGITS_PER_BYTE
     MEM_ERROR_INDEX_END_BYTE = 2
@@ -74,6 +77,19 @@ class GlobalConstants:
 
     ADDRESS_BYTE_NUM = 3
 
+    ECC_CHECK_PERIODS = {
+        100: 0,
+        1000: 1,
+        10000: 2,
+        60000: 3
+    }
+
+    MAX_ADDRESSES_ECC = 39
+
+    # HEARTBEAT related constants
+    HEARTBEAT_LEN = 24
+    HEARTBEAT_RESPONSE_LEN = 21 * HEX_DIGITS_PER_BYTE
+
     HEARTBEAT_PERIOD_START = 0
     HEARTBEAT_PERIOD_END = 1 * HEX_DIGITS_PER_BYTE
     HEARTBEAT_ID_START = 1 * HEX_DIGITS_PER_BYTE
@@ -86,11 +102,11 @@ class GlobalConstants:
         1000: 3
     }
 
-    ECC_CHECK_PERIODS = {
-        100: 0,
-        1000: 1,
-        10000: 2,
-        60000: 3
+    # RESET related constants
+    RESET_PURPOSES = {
+        0x40: 'SYST',
+        0x20: 'WDT',
+        0x10: 'EXT',
+        0x08: 'NVM',
+        0x01: 'POR'
     }
-
-    MAX_ADDRESSES_ECC = 39
