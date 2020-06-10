@@ -37,8 +37,15 @@ class DataStorage:
         self.curr_data.data_payload += GlobalConstants.END_CODE
         self.curr_data.complete_data += GlobalConstants.END_CODE
 
+        self.classify_data()
         print(str(curr_time) + ' saving data: ' + self.curr_data.complete_data)
 
+        self.curr_data.payload_len = len(self.curr_data.data_payload)
+        self.data_cnt += 1
+        self.prev_data = self.curr_data
+        self.curr_data = Data()
+
+    def classify_data(self):
         data_type = self.curr_data.purpose
         if not data_type == 'HEARTBEAT':
             self.data_arr.append(self.curr_data)
@@ -49,11 +56,6 @@ class DataStorage:
             reset_purpose = GlobalConstants.RESET_PURPOSES[payload_int]
             reset_packet = ResetData(reset_purpose)
             self.reset_storage.add(reset_packet)
-
-        self.curr_data.payload_len = len(self.curr_data.data_payload)
-        self.data_cnt += 1
-        self.prev_data = self.curr_data
-        self.curr_data = Data()
 
     def reset_curr_data(self):
         self.prev_data = Data()

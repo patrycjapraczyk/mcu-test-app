@@ -7,21 +7,13 @@ class ComInterface(ABC):
         pass
 
     @abstractmethod
-    def read_data(self) -> None:
+    def read_data(self) -> bytearray:
         pass
 
     @abstractmethod
-    def add_data_to_send_queue(self, data: bytearray) -> None:
+    def send_data(self, data: bytearray):
         pass
 
     @abstractmethod
-    def send_data_packet(self, data: bytearray):
-        pass
-
-    @staticmethod
-    def get_max_frames_num(period, baudrate) -> int:
-        pass
-
-    @abstractmethod
-    def send_packet_stream(self) -> None:
+    def is_connected(self) -> bool:
         pass

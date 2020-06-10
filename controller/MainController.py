@@ -1,4 +1,4 @@
-from model.Communication.ComInterfaceFactory import ComInterfaceFactory
+from model.Communication.CommunicationManager import CommunicationManager
 from model.StaticClasses.DataPacketFactory import DataPacketFactory
 from model.DataProcessingThread import DataProcessingThread
 from model.Data.ComErrorStorage import ComErrorStorage
@@ -12,7 +12,7 @@ class MainController:
 
     def __init__(self):
         self.com_error_storage = ComErrorStorage()
-        self.com_interface = ComInterfaceFactory.get_interface(self.INTERFACE_TYPE, self.com_error_storage)
+        self.com_interface = CommunicationManager(self.com_error_storage)
         self.data_storage = DataStorage()
         self.stopped = False
 

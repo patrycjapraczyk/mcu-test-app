@@ -6,7 +6,7 @@ from model.StaticClasses.StrManipulator import StrManipulator
 from model.StaticClasses.Calculator import Calculator
 from queue import Queue
 from model.Data.Data import Data
-from model.Communication.SerialManager import SerialManager
+from model.Communication.CommunicationManager import CommunicationManager
 from model.StaticClasses.DataStructFunctions import DataStructFunctions
 from threading import Thread
 
@@ -140,7 +140,7 @@ class TestSerialCom:
 
     def send_data_stream(self, heartbeat: bytearray):
         data_sent = 0
-        max_frames = SerialManager.get_max_frames_num(self.curr_heartbeat_period, TestSerialCom.BAUDRATE)
+        max_frames = CommunicationManager.get_max_frames_num(self.curr_heartbeat_period, TestSerialCom.BAUDRATE)
         while (not self.send_data_queue.empty()) and data_sent < max_frames:
             data = self.send_data_queue.get()
             self.send_data_packet(data)

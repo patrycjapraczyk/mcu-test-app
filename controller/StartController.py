@@ -1,3 +1,4 @@
+from model.Communication.CommunicationManager import CommunicationManager
 from model.Communication.SerialManager import SerialManager
 
 class StartController:
@@ -5,4 +6,4 @@ class StartController:
         return SerialManager.serial_ports()
 
     def get_baudrates(self):
-        return SerialManager.BAUDRATES
+        return CommunicationManager.BAUDRATES
