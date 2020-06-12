@@ -8,8 +8,6 @@ from threading import Thread
 
 
 class MainController:
-    INTERFACE_TYPE = 'SERIAL'
-
     def __init__(self):
         self.com_error_storage = ComErrorStorage()
         self.com_interface = CommunicationManager(self.com_error_storage)

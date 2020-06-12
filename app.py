@@ -111,7 +111,6 @@ def stop_test():
 @app.route('/get_correct_percentage', methods=['GET'])
 def get_correct_percentage():
     percent = main_controller.get_correct_percentage()
-    print()
     return str(percent)
 
 
