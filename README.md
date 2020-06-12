@@ -36,7 +36,7 @@ Project Python dependencies/packages, must be installed before running the proje
 	* StartController.py - controller functions for the start page
 	* MainController.py - controller functions for the main page
 * model/
-	* Communication/ - all communication related classes
+* Communication/ - all communication related classes
 	* ComInterfaceFactory.py - creates and gets a communication interface of the type given
 	* CommunicationManager.py - controls communication with the client, holds queues for data to be sent and received, contains heartbeat loop and sends commands to the client
 	* ETHSocketManager.py - manages Ethernet communication - based on socket API
