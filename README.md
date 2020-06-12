@@ -103,4 +103,4 @@ When logging to files with a more specific message format, create a new class wi
 https://freevirtualserialports.com
 
 ## Future development:
-Detailed description and instructions of the future tasks is found under **Gitlab issues**
+Detailed description and instructions for the future tasks is found under **Gitlab issues**
