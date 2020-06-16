@@ -15,6 +15,7 @@ class ETHSocketManager(ComInterface):
         try:
             self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             # connecting to the data sender
+            # TODO: change to use a server configuration listen/accept
             self.s.connect((GlobalConstants.HOST, GlobalConstants.PORT))
             self.connected = True
             print("Socket successfully created")

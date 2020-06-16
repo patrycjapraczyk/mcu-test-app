@@ -45,7 +45,8 @@ class GlobalConstants:
         'RESET_REQUEST': 0x02,
         'RESET_RESPONSE': 0x03,
         'ECC_CHECKED': 0x04,
-        'ECC_PERIOD_CHANGE': 0x05
+        'ECC_PERIOD_CHANGE': 0x05,
+        'ADC_DATA': 0x06
     }
 
     # max values

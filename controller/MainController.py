@@ -44,7 +44,7 @@ class MainController:
         return list(GlobalConstants.ECC_CHECK_PERIODS.keys())
 
     def send_rest_request(self):
-        reset_packet = DataPacketFactory.get_packet('RESET')
+        reset_packet = DataPacketFactory.get_packet('RESET_REQUEST')
         self.com_interface.add_data_to_send_queue(reset_packet)
 
     def set_heartbeat_period(self, heartbeat_period):
