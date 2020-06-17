@@ -36,43 +36,43 @@ Project Python dependencies/packages, must be installed before running the proje
 	* StartController.py - controller functions for the start page
 	* MainController.py - controller functions for the main page
 * model/
-	* Communication/ - all communication related classes
-	* ComInterfaceFactory.py - creates and gets a communication interface of the type given
-	* CommunicationManager.py - controls communication with the client, holds queues for data to be sent and received, contains heartbeat loop and sends commands to the client
-	* ETHSocketManager.py - manages Ethernet communication - based on socket API
-	* SerialManager.py - manages serial communication
-* Data/ - representation of data frames of different types and their storage
-	* ComError.py
-	* ComErrorStorage.py
-	* Data.py
-	* DataStorage.py
-	* MemErrorData.py
-	* MemErrorStorage.py
-	* ResetData.py
-	* ResetStorage.py
-* Interfaces/ - abstract classes
-	* ComInterface.py
-	* FileManager.py
-
-* Logging/ - all logging related classes,
-When logging to files with a more specific message format, create a new class with Logger composition
-	* ComErrorLogger.py
-	* JSONEncoder.py
-	* Logger.py - basic Logger class, holds file manager interface (for example TextFileManager)
-	* MemErrorLogger.py
-	* ResetLogger.py
-	* TextFileManager.py - text file IO
-* Observer/ - Observer pattern related abstract classes
-* StaticClasses/ - classes containing static helper functions for various purposes
-	* Calculator.py
-	* Checksum.py
-	* DataPacketFactory.py - creates and returns a bytearray of a packet with a specific format related to MSG_CODE
-	* DataStructFunctions.py
-	* GlobalConstants.py - global constants for all files across the project
-	* StrManipulator.py
-	* Time.py
-
-* DataProcessingThread.py - inherits from Thread, performs correctness analysis of data packets (according to the frame format)
+    * Communication/ - all communication related classes
+    	* ComInterfaceFactory.py - creates and gets a communication interface of the type given
+    	* CommunicationManager.py - controls communication with the client, holds queues for data to be sent and received, contains heartbeat loop and sends commands to the client
+    	* ETHSocketManager.py - manages Ethernet communication - based on socket API
+    	* SerialManager.py - manages serial communication
+    * Data/ - representation of data frames of different types and their storage
+    	* ComError.py
+    	* ComErrorStorage.py
+    	* Data.py
+    	* DataStorage.py
+    	* MemErrorData.py
+    	* MemErrorStorage.py
+    	* ResetData.py
+    	* ResetStorage.py
+    * Interfaces/ - abstract classes
+    	* ComInterface.py
+    	* FileManager.py
+    
+    * Logging/ - all logging related classes,
+    When logging to files with a more specific message format, create a new class with Logger composition
+    	* ComErrorLogger.py
+    	* JSONEncoder.py
+    	* Logger.py - basic Logger class, holds file manager interface (for example TextFileManager)
+    	* MemErrorLogger.py
+    	* ResetLogger.py
+    	* TextFileManager.py - text file IO
+    * Observer/ - Observer pattern related abstract classes
+    * StaticClasses/ - classes containing static helper functions for various purposes
+    	* Calculator.py
+    	* Checksum.py
+    	* DataPacketFactory.py - creates and returns a bytearray of a packet with a specific format related to MSG_CODE
+    	* DataStructFunctions.py
+    	* GlobalConstants.py - global constants for all files across the project
+    	* StrManipulator.py
+    	* Time.py
+    
+    * DataProcessingThread.py - inherits from Thread, performs correctness analysis of data packets (according to the frame format)
 
 * static/
 	* assets/ - all GUI assets, such as images
@@ -103,4 +103,4 @@ When logging to files with a more specific message format, create a new class wi
 https://freevirtualserialports.com
 
 ## Future development:
-Detailed description and instructions of the future tasks is found under **Gitlab issues**
+Detailed description and instructions for the future tasks is found under **Gitlab issues**
