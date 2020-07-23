@@ -197,6 +197,9 @@ class DataProcessingThread(Thread, Subject):
 
         if prev_index != GlobalConstants.MAX_DATA_INDEX:
             if curr_index != prev_index + 1:
+
+                if curr_index == 0 and curr_data_item.purpose == 'RESET_RESPONSE':
+                    return True
                 
                 self.add_com_error('UNORDERED DATA_CNT',extra_data=' prev data_index: '+str(prev_index) +
                                                                     ', curr data index: ' + str(curr_index) + '\n')
